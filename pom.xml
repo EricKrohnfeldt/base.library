@@ -4,7 +4,7 @@
 
 	<scm>
 		<developerConnection>scm:git:ssh://git.herb.herbmarshall.com/repository/util/javaExtensions.library</developerConnection>
-		<tag>HEAD</tag>
+		<tag>javaExtensions.library-1.0</tag>
 	</scm>
 
 	<parent>
@@ -14,7 +14,7 @@
 	</parent>
 
 	<artifactId>javaExtensions.library</artifactId>
-	<version>1.0-SNAPSHOT</version>
+	<version>1.0</version>
 	<packaging>jar</packaging>
 
 	<properties>
