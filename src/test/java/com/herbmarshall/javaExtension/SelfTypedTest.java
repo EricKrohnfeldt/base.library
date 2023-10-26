@@ -1,4 +1,4 @@
-package com.herbmarshall.javaExtensions;
+package com.herbmarshall.javaExtension;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -28,8 +28,8 @@ class SelfTypedTest {
 		// Assert
 		catch ( ClassCastException e ) {
 			Assertions.assertTrue( e.getMessage().contains(
-				"class com.herbmarshall.javaExtensions.SelfTypedTest$WrongSelf " +
-				"cannot be cast to class com.herbmarshall.javaExtensions.SelfTypedTest$CorrectSelf"
+				"class com.herbmarshall.javaExtension.SelfTypedTest$WrongSelf " +
+				"cannot be cast to class com.herbmarshall.javaExtension.SelfTypedTest$CorrectSelf"
 			) );
 		}
 	}

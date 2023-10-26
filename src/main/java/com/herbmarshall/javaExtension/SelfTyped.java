@@ -1,4 +1,4 @@
-package com.herbmarshall.javaExtensions;
+package com.herbmarshall.javaExtension;
 
 /**
  * A class that contains generic self returning methods.
