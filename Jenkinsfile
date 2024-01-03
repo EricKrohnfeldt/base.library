@@ -59,7 +59,17 @@ pipeline {
 					sh 'git checkout master'
 					sh 'git reset --hard origin/master'
 					sh "git merge --ff-only jenkins_${BUILD_NUMBER}"
-					sh 'mvn release:prepare --batch-mode'
+					sh 'mvn release:prepare release:perform --batch-mode'
+                }
+			}
+		}
+		stage( 'Deploy JavaDoc' ) {
+			when { beforeAgent true; not { branch pattern: 'master(-\\d+)?', comparator: 'REGEXP' }; expression { releaseCandidate } }
+			agent { docker { image env.DOCKER_IMAGE; args env.DOCKER_ARGS; registryUrl env.DOCKER_URL; registryCredentialsId env.DOCKER_CREDS } }
+			steps {
+				milestone 4
+				sshagent( [ 'KirbyGitKey' ] ) {
+                    sh 'mvn release:prepare -DdryRun=true'
                     script {
                         artifactName = sh(
                             script: "mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout",
@@ -73,18 +83,6 @@ pipeline {
                         ).trim()
                     }
                     sh "echo ${artifactName} [ ${artifactVersion} ]"
-                    sh 'pwd && ls && ls -l target'
-                    sh 'cat release.properties'
-					sh 'mvn release:perform --batch-mode'
-                }
-			}
-		}
-		stage( 'Deploy JavaDoc' ) {
-			when { beforeAgent true; not { branch pattern: 'master(-\\d+)?', comparator: 'REGEXP' }; expression { releaseCandidate } }
-			agent { docker { image env.DOCKER_IMAGE; args env.DOCKER_ARGS; registryUrl env.DOCKER_URL; registryCredentialsId env.DOCKER_CREDS } }
-			steps {
-				milestone 4
-				sshagent( [ 'KirbyGitKey' ] ) {
 					sh 'rm -rf javadoc.info* || true'
 					sh 'mvn clean javadoc:javadoc'
 					sh 'git clone git@git.herb.herbmarshall.com:repository/util/javadoc.info'
