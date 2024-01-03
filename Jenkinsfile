@@ -72,6 +72,7 @@ pipeline {
                             returnStdout: true
                         ).trim()
                     }
+                    sh "echo ${artifactName} [ ${artifactVersion} ]"
 					sh 'mvn release:perform --batch-mode'
                 }
 			}
