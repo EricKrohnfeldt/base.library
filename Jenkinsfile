@@ -76,6 +76,7 @@ pipeline {
 				}
 				sh "echo Artifact version: $artifactVersion"
 				sshagent( [ 'KirbyGitKey' ] ) {
+					sh 'pwd && rm -rf javadoc.info || true'
 					sh 'pwd && git clone git@git.herb.herbmarshall.com:repository/util/javadoc.info'
 					sh 'pwd && cd javadoc.info'
 					sh 'pwd && git checkout work'
