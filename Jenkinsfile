@@ -85,7 +85,7 @@ pipeline {
                         sh 'git checkout work'
                         sh "cp -r ../target/site/apidocs site/${JOB_NAME}/${artifactVersion}"
                         sh "git add site/${JOB_NAME}/${artifactVersion}"
-                        sh "git commit -m "Add "${JOB_NAME}/${artifactVersion}" docs"
+                        sh "git commit -m \"Add ${JOB_NAME}/${artifactVersion} docs\""
                         sh 'git push'
                     }
 				}
