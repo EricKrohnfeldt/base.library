@@ -59,7 +59,7 @@ pipeline {
 					sh 'git checkout master'
 					sh 'git reset --hard origin/master'
 					sh "git merge --ff-only jenkins_${BUILD_NUMBER}"
-					sh 'mvn release:prepare release:perform --batch-mode'
+					#sh 'mvn release:prepare release:perform --batch-mode'
 				}
 			}
 		}
@@ -68,7 +68,6 @@ pipeline {
 			agent { docker { image env.DOCKER_IMAGE; args env.DOCKER_ARGS; registryUrl env.DOCKER_URL; registryCredentialsId env.DOCKER_CREDS } }
 			steps {
 				milestone 4
-				sh "mkdir docs && cd docs"
 				script {
 					artifactVersion = sh(
 						script: "mvn help:evaluate -Dexpression=project.version -q -DforceStdout",
@@ -77,13 +76,13 @@ pipeline {
 				}
 				sh "echo Artifact version: $artifactVersion"
 				sshagent( [ 'KirbyGitKey' ] ) {
-					sh 'git clone git@git.herb.herbmarshall.com:repository/util/javadoc.info'
-					sh 'git checkout work'
-					sh 'git reset --hard origin/work'
-					sh "cp -r ../target/target/site/apidocs site/${JOB_NAME}/${artifactVersion}"
-					sh 'git add site/${JOB_NAME}/${artifactVersion}'
-					sh 'git commit -m "Add "${JOB_NAME}/${artifactVersion}" docs'
-					sh 'git push'
+					sh 'pwd && git clone git@git.herb.herbmarshall.com:repository/util/javadoc.info'
+					sh 'pwd && cd javadoc.info'
+					sh 'pwd && git checkout work'
+					sh "pwd && cp -r ../target/target/site/apidocs site/${JOB_NAME}/${artifactVersion}"
+					sh 'pwd && git add site/${JOB_NAME}/${artifactVersion}'
+					sh 'pwd && git commit -m "Add "${JOB_NAME}/${artifactVersion}" docs'
+					sh 'pwd && git push'
 				}
 			}
 		}
