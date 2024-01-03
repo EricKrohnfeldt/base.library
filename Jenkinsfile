@@ -7,7 +7,7 @@ pipeline {
 			agent { docker { image env.DOCKER_IMAGE; args env.DOCKER_ARGS; registryUrl env.DOCKER_URL; registryCredentialsId env.DOCKER_CREDS } }
 			steps {
 				milestone 1
-				sh 'mvn clean deploy'
+				sh 'mvn clean deploy javadoc:javadoc'
 			}
 		}
 		stage( 'Prepare merge' ) {
@@ -60,6 +60,30 @@ pipeline {
 					sh 'git reset --hard origin/master'
 					sh "git merge --ff-only jenkins_${BUILD_NUMBER}"
 					sh 'mvn release:prepare release:perform --batch-mode'
+				}
+			}
+		}
+		stage( 'Deploy JavaDoc' ) {
+			when { beforeAgent true; not { branch pattern: 'master(-\\d+)?', comparator: 'REGEXP' }; expression { releaseCandidate } }
+			agent { docker { image env.DOCKER_IMAGE; args env.DOCKER_ARGS; registryUrl env.DOCKER_URL; registryCredentialsId env.DOCKER_CREDS } }
+			steps {
+				milestone 4
+				sh "mkdir docs && cd docs"
+				script {
+					artifactVersion = sh(
+						script: "mvn help:evaluate -Dexpression=project.version -q -DforceStdout",
+						returnStatus: true
+					)
+				}
+				sh "echo Artifact version: $artifactVersion"
+				sshagent( [ 'KirbyGitKey' ] ) {
+					sh 'git clone git@git.herb.herbmarshall.com:repository/util/javadoc.info'
+					sh 'git checkout work'
+					sh 'git reset --hard origin/work'
+					sh "cp -r ../target/target/site/apidocs site/${JOB_NAME}/${artifactVersion}"
+					sh 'git add site/${JOB_NAME}/${artifactVersion}'
+					sh 'git commit -m "Add "${JOB_NAME}/${artifactVersion}" docs'
+					sh 'git push'
 				}
 			}
 		}
