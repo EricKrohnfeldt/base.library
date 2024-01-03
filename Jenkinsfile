@@ -68,22 +68,22 @@ pipeline {
 			agent { docker { image env.DOCKER_IMAGE; args env.DOCKER_ARGS; registryUrl env.DOCKER_URL; registryCredentialsId env.DOCKER_CREDS } }
 			steps {
 				milestone 4
+                script {
+                    artifactName = sh(
+                        script: "mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout",
+                        returnStdout: true
+                    ).trim()
+                }
+                script {
+                    artifactVersion = sh(
+                        script: "mvn help:evaluate -Dexpression=project.version -q -DforceStdout",
+                        returnStdout: true
+                    ).trim().minus( '-SNAPSHOT' )
+                }
+                sh "echo ${artifactName} [ ${artifactVersion} ]"
+                sh 'rm -rf javadoc.info* || true'
+                sh 'mvn clean javadoc:javadoc'
 				sshagent( [ 'KirbyGitKey' ] ) {
-                    script {
-                        artifactName = sh(
-                            script: "mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout",
-                            returnStdout: true
-                        ).trim()
-                    }
-                    script {
-                        artifactVersion = sh(
-                            script: "mvn help:evaluate -Dexpression=project.version -q -DforceStdout",
-                            returnStdout: true
-                        ).trim().minus( '-SNAPSHOT' )
-                    }
-                    sh "echo ${artifactName} [ ${artifactVersion} ]"
-					sh 'rm -rf javadoc.info* || true'
-					sh 'mvn clean javadoc:javadoc'
 					sh 'git clone git@git.herb.herbmarshall.com:repository/util/javadoc.info'
 					dir('javadoc.info') {
                         sh 'git checkout work'
