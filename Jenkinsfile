@@ -80,15 +80,14 @@ pipeline {
 						returnStdout: true
 					).trim()
 				}
-				sh "echo Artifact version: ${artifactVersion}"
 				sshagent( [ 'KirbyGitKey' ] ) {
-                    sh "echo ${artifactName} [ ${artifactVersion} ]"
 					sh 'rm -rf javadoc.info* || true'
 					sh 'mvn clean javadoc:javadoc'
 					sh 'git clone git@git.herb.herbmarshall.com:repository/util/javadoc.info'
 					dir('javadoc.info') {
 					    sh "echo ${artifactName} ${artifactVersion}"
                         sh 'git checkout work'
+                        sh "mkdir -p site/${artifactName}"
                         sh "cp -r ../target/site/apidocs site/${artifactName}/${artifactVersion}"
                         sh "git add site/${artifactName}/${artifactVersion}"
                         sh "git commit -m \"Add ${artifactName} ${artifactVersion} docs\""
