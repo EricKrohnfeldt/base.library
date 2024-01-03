@@ -69,7 +69,6 @@ pipeline {
 			steps {
 				milestone 4
 				sshagent( [ 'KirbyGitKey' ] ) {
-                    sh 'mvn release:prepare -DdryRun=true'
                     script {
                         artifactName = sh(
                             script: "mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout",
@@ -80,7 +79,7 @@ pipeline {
                         artifactVersion = sh(
                             script: "mvn help:evaluate -Dexpression=project.version -q -DforceStdout",
                             returnStdout: true
-                        ).trim()
+                        ).trim().minus( '-SNAPSHOT' )
                     }
                     sh "echo ${artifactName} [ ${artifactVersion} ]"
 					sh 'rm -rf javadoc.info* || true'
