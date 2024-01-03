@@ -59,7 +59,7 @@ pipeline {
 					sh 'git checkout master'
 					sh 'git reset --hard origin/master'
 					sh "git merge --ff-only jenkins_${BUILD_NUMBER}"
-					#sh 'mvn release:prepare release:perform --batch-mode'
+					sh '#mvn release:prepare release:perform --batch-mode'
 				}
 			}
 		}
