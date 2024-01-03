@@ -7,7 +7,7 @@ pipeline {
 			agent { docker { image env.DOCKER_IMAGE; args env.DOCKER_ARGS; registryUrl env.DOCKER_URL; registryCredentialsId env.DOCKER_CREDS } }
 			steps {
 				milestone 1
-				sh 'mvn clean deploy javadoc:javadoc'
+				sh 'mvn clean deploy'
 			}
 		}
 		stage( 'Prepare merge' ) {
@@ -76,11 +76,12 @@ pipeline {
 				}
 				sh "echo Artifact version: $artifactVersion"
 				sshagent( [ 'KirbyGitKey' ] ) {
-					sh 'rm -rf javadoc.info || true'
+					sh 'rm -rf javadoc.info* || true'
+					sh 'mvn clean javadoc:javadoc'
 					sh 'git clone git@git.herb.herbmarshall.com:repository/util/javadoc.info'
 					dir('javadoc.info') {
                         sh 'pwd && git checkout work'
-                        sh "pwd && cp -r ../target/target/site/apidocs site/${JOB_NAME}/${artifactVersion}"
+                        sh "pwd && cp -r ../target/site/apidocs site/${JOB_NAME}/${artifactVersion}"
                         sh 'pwd && git add site/${JOB_NAME}/${artifactVersion}'
                         sh 'pwd && git commit -m "Add "${JOB_NAME}/${artifactVersion}" docs'
                         sh 'pwd && git push'
