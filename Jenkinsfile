@@ -76,14 +76,16 @@ pipeline {
 				}
 				sh "echo Artifact version: $artifactVersion"
 				sshagent( [ 'KirbyGitKey' ] ) {
-					sh 'pwd && rm -rf javadoc.info || true'
-					sh 'pwd && git clone git@git.herb.herbmarshall.com:repository/util/javadoc.info'
-					sh 'pwd && cd javadoc.info'
-					sh 'pwd && git checkout work'
-					sh "pwd && cp -r ../target/target/site/apidocs site/${JOB_NAME}/${artifactVersion}"
-					sh 'pwd && git add site/${JOB_NAME}/${artifactVersion}'
-					sh 'pwd && git commit -m "Add "${JOB_NAME}/${artifactVersion}" docs'
-					sh 'pwd && git push'
+					sh 'rm -rf javadoc.info || true'
+					sh 'git clone git@git.herb.herbmarshall.com:repository/util/javadoc.info'
+					dir('javadoc.info') {
+                        sh 'pwd && cd javadoc.info'
+                        sh 'pwd && git checkout work'
+                        sh "pwd && cp -r ../target/target/site/apidocs site/${JOB_NAME}/${artifactVersion}"
+                        sh 'pwd && git add site/${JOB_NAME}/${artifactVersion}'
+                        sh 'pwd && git commit -m "Add "${JOB_NAME}/${artifactVersion}" docs'
+                        sh 'pwd && git push'
+                    }
 				}
 			}
 		}
