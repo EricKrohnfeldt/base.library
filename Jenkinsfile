@@ -71,21 +71,21 @@ pipeline {
 				script {
 					artifactVersion = sh(
 						script: "mvn help:evaluate -Dexpression=project.version -q -DforceStdout",
-						returnStatus: true
-					)
+						returnStdout: true
+					).trim()
 				}
-				sh "echo Artifact version: $artifactVersion"
+				sh "echo Artifact version: ${artifactVersion}"
 				sshagent( [ 'KirbyGitKey' ] ) {
-                    sh "echo ${JOB_NAME} ${artifactVersion}"
+                    sh "echo ${JOB_BASE_NAME} [ ${artifactVersion} ]"
 					sh 'rm -rf javadoc.info* || true'
 					sh 'mvn clean javadoc:javadoc'
 					sh 'git clone git@git.herb.herbmarshall.com:repository/util/javadoc.info'
 					dir('javadoc.info') {
 					    sh "echo ${JOB_NAME} ${artifactVersion}"
                         sh 'git checkout work'
-                        sh "cp -r ../target/site/apidocs site/${JOB_NAME}/${artifactVersion}"
+                        sh "cp -r ../target/site/apidocs site/${JOB_BASE_NAME}/${artifactVersion}"
                         sh "git add site/${JOB_NAME}/${artifactVersion}"
-                        sh "git commit -m \"Add ${JOB_NAME}/${artifactVersion} docs\""
+                        sh "git commit -m \"Add ${JOB_BASE_NAME} ${artifactVersion} docs\""
                         sh 'git push'
                     }
 				}
