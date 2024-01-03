@@ -74,6 +74,7 @@ pipeline {
                     }
                     sh "echo ${artifactName} [ ${artifactVersion} ]"
                     sh 'pwd && ls && ls -l target'
+                    sh 'cat release.properties'
 					sh 'mvn release:perform --batch-mode'
                 }
 			}
