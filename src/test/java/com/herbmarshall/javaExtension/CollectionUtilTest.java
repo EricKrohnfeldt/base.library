@@ -4,7 +4,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -152,6 +154,46 @@ class CollectionUtilTest {
 			// Assert
 			catch ( NullPointerException ignored ) {
 			}
+		}
+
+	}
+
+	@Nested
+	class last {
+
+		@Test
+		void happyPath() {
+			// Arrange
+			Object itemA = random();
+			Object itemB = random();
+			Object itemC = random();
+			List<Object> list = List.of( itemA, itemB, itemC );
+			// Act
+			Optional<Object> output = CollectionUtil.last( list );
+			// Assert
+			Assertions.assertTrue( output.isPresent() );
+			Assertions.assertSame( itemC, output.get() );
+		}
+
+		@Test
+		void emptyList() {
+			// Arrange
+			List<Object> list = List.of();
+			// Act
+			Optional<Object> output = CollectionUtil.last( list );
+			// Assert
+			Assertions.assertTrue( output.isEmpty() );
+		}
+
+		@Test
+		void nullElement() {
+			// Arrange
+			List<Object> list = new ArrayList<>();
+			list.add( null );
+			// Act
+			Optional<Object> output = CollectionUtil.last( list );
+			// Assert
+			Assertions.assertTrue( output.isEmpty() );
 		}
 
 	}
