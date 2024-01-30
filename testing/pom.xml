@@ -9,18 +9,19 @@
 
 	<parent>
 		<groupId>com.herbmarshall</groupId>
-		<artifactId>LibraryParent</artifactId>
-		<version>   1.14   </version>
+		<artifactId>javaExtension.pom</artifactId>
+		<version>   1.13-SNAPSHOT   </version>
 	</parent>
 
-	<artifactId>javaExtension.pom</artifactId>
+	<artifactId>javaExtension.testing</artifactId>
 	<version>1.13-SNAPSHOT</version>
-	<packaging>pom</packaging>
+	<packaging>jar</packaging>
 
-    <modules>
-        <module>library</module>
-        <module>testing</module>
-	</modules>
+	<properties>
+	</properties>
+
+	<dependencies>
+	</dependencies>
 
 	<repositories>
 		<repository>
