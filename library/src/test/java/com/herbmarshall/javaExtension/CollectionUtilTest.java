@@ -5,6 +5,9 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -159,7 +162,7 @@ class CollectionUtilTest {
 	}
 
 	@Nested
-	class last {
+	class last_list {
 
 		@Test
 		void happyPath() {
@@ -192,6 +195,46 @@ class CollectionUtilTest {
 			list.add( null );
 			// Act
 			Optional<Object> output = CollectionUtil.last( list );
+			// Assert
+			Assertions.assertTrue( output.isEmpty() );
+		}
+
+	}
+
+	@Nested
+	class last_collection {
+
+		@Test
+		void happyPath() {
+			// Arrange
+			Object itemA = random();
+			Object itemB = random();
+			Object itemC = random();
+			Collection<Object> collection = new LinkedHashSet<>( List.of( itemA, itemB, itemC ) );
+			// Act
+			Optional<Object> output = CollectionUtil.last( collection );
+			// Assert
+			Assertions.assertTrue( output.isPresent() );
+			Assertions.assertSame( itemC, output.get() );
+		}
+
+		@Test
+		void emptyList() {
+			// Arrange
+			Collection<Object> collection = Set.of();
+			// Act
+			Optional<Object> output = CollectionUtil.last( collection );
+			// Assert
+			Assertions.assertTrue( output.isEmpty() );
+		}
+
+		@Test
+		void nullElement() {
+			// Arrange
+			Collection<Object> collection = new HashSet<>();
+			collection.add( null );
+			// Act
+			Optional<Object> output = CollectionUtil.last( collection );
 			// Assert
 			Assertions.assertTrue( output.isEmpty() );
 		}
