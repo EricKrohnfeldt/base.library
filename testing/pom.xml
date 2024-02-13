@@ -4,17 +4,17 @@
 
     <scm>
 		<developerConnection>scm:git:ssh://git.herb.herbmarshall.com/repository/util/javaExtension.library</developerConnection>
-		<tag>HEAD</tag>
+		<tag>javaExtension.pom-1.13</tag>
 	</scm>
 
 	<parent>
 		<groupId>com.herbmarshall</groupId>
 		<artifactId>javaExtension.pom</artifactId>
-		<version>   1.13-SNAPSHOT   </version>
+		<version>   1.13   </version>
 	</parent>
 
 	<artifactId>javaExtension.testing</artifactId>
-	<version>1.13-SNAPSHOT</version>
+	<version>1.13</version>
 	<packaging>jar</packaging>
 
 	<properties>
