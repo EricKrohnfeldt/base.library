@@ -3,13 +3,13 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>com.herbmarshall</groupId>
-		<artifactId>base.parent</artifactId>
-		<version>   1.15-SNAPSHOT   </version>
+		<groupId>   com.herbmarshall   </groupId>
+		<artifactId>     base.parent   </artifactId>
+		<version>      1.16-SNAPSHOT   </version>
 	</parent>
 
 	<artifactId>base.test</artifactId>
-	<version>1.15-SNAPSHOT</version>
+	<version>1.16-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<properties>
