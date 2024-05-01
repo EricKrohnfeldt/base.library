@@ -5,11 +5,11 @@
 	<parent>
 		<groupId>   com.herbmarshall   </groupId>
 		<artifactId>     base.parent   </artifactId>
-		<version>      1.16   </version>
+		<version>      1.17-SNAPSHOT   </version>
 	</parent>
 
 	<artifactId>base</artifactId>
-	<version>1.16</version>
+	<version>1.17-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<properties>
