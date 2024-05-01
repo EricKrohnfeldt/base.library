@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
     <scm>
-		<developerConnection>scm:git:ssh://git.herb.herbmarshall.com/repository/util/javaExtension.library</developerConnection>
+		<developerConnection>scm:git:ssh://git.herb.herbmarshall.com/repository/util/base.library</developerConnection>
 		<tag>HEAD</tag>
 	</scm>
 
@@ -13,13 +13,13 @@
 		<version>                  1.15   </version>
 	</parent>
 
-	<artifactId>javaExtension.pom</artifactId>
+	<artifactId>base.parent</artifactId>
 	<version>1.15-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
     <modules>
+		<module>testing</module>
         <module>library</module>
-        <module>testing</module>
 	</modules>
 
 	<repositories>
