@@ -4,7 +4,7 @@
 
     <scm>
 		<developerConnection>scm:git:ssh://git.herb.herbmarshall.com/repository/util/base.library</developerConnection>
-		<tag>HEAD</tag>
+		<tag>base.parent-1.16</tag>
 	</scm>
 
 	<parent>
@@ -14,7 +14,7 @@
 	</parent>
 
 	<artifactId>base.parent</artifactId>
-	<version>1.16-SNAPSHOT</version>
+	<version>1.16</version>
 	<packaging>pom</packaging>
 
     <modules>
