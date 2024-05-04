@@ -9,17 +9,17 @@
 
 	<parent>
 		<groupId>      com.herbmarshall   </groupId>
-		<artifactId>      LibraryParent   </artifactId>
-		<version>                  1.15   </version>
+		<artifactId>        library.pom   </artifactId>
+		<version>                  1.16   </version>
 	</parent>
 
-	<artifactId>base.parent</artifactId>
+	<artifactId>base.pom</artifactId>
 	<version>1.17-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
     <modules>
-		<module>testing</module>
-        <module>library</module>
+		<module>test</module>
+        <module>production</module>
 	</modules>
 
 	<repositories>
