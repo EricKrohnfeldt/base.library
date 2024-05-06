@@ -17,7 +17,7 @@
 
     <scm>
 		<developerConnection>scm:git:ssh://git.herb.herbmarshall.com/repository/util/base.library</developerConnection>
-		<tag>HEAD</tag>
+		<tag>base.pom-1.17</tag>
 	</scm>
 
 	<parent>
@@ -27,7 +27,7 @@
 	</parent>
 
 	<artifactId>base.pom</artifactId>
-	<version>1.17-SNAPSHOT</version>
+	<version>1.17</version>
 	<packaging>pom</packaging>
 
     <modules>

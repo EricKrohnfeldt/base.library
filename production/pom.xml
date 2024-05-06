@@ -18,11 +18,11 @@
 	<parent>
 		<groupId>   com.herbmarshall   </groupId>
 		<artifactId>        base.pom   </artifactId>
-		<version>      1.17-SNAPSHOT   </version>
+		<version>      1.17   </version>
 	</parent>
 
 	<artifactId>base</artifactId>
-	<version>1.17-SNAPSHOT</version>
+	<version>1.17</version>
 	<packaging>jar</packaging>
 
 	<properties>
