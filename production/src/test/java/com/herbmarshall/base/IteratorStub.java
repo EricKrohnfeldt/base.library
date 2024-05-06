@@ -11,7 +11,7 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.herbmarshall.javaExtension;
+package com.herbmarshall.base;
 
 import java.util.Iterator;
 
