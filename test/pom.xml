@@ -32,12 +32,4 @@
 	<dependencies>
 	</dependencies>
 
-	<repositories>
-		<repository>
-			<id>Nexus</id>
-			<name>HerbMarshall Repository</name>
-			<url>https://nexus.herb.herbmarshall.com/repository/maven-public/</url>
-		</repository>
-	</repositories>
-
 </project>
