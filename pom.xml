@@ -27,20 +27,20 @@
 		<version>                  1.16   </version>
 	</parent>
 
-	<artifactId>base.pom</artifactId>
-	<version>1.19-SNAPSHOT</version>
-	<packaging>pom</packaging>
+	<artifactId>     base.pom   </artifactId>
+	<version>   1.19-SNAPSHOT   </version>
+	<packaging>           pom   </packaging>
 
     <modules>
-		<module>test</module>
-        <module>production</module>
+		<module>         test   </module>
+        <module>   production   </module>
 	</modules>
 
 	<repositories>
 		<repository>
-			<id>Nexus</id>
-			<name>HerbMarshall Repository</name>
-			<url>https://nexus.herb.herbmarshall.com/repository/maven-public/</url>
+			<id>                                                           Nexus   </id>
+			<name>                                       HerbMarshall Repository   </name>
+			<url>   https://nexus.herb.herbmarshall.com/repository/maven-public/   </url>
 		</repository>
 	</repositories>
 
