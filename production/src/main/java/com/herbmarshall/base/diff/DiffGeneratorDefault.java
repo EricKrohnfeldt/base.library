@@ -16,6 +16,9 @@ package com.herbmarshall.base.diff;
 
 import com.herbmarshall.base.Equals;
 
+import static com.herbmarshall.base.diff.DiffVisualizer.MAX;
+import static com.herbmarshall.base.diff.DiffVisualizer.MIN;
+
 final class DiffGeneratorDefault implements DiffGenerator {
 
 	static final String DEFAULT_MESSAGE = "No diff generated, please set DiffGenerator";
@@ -29,8 +32,8 @@ final class DiffGeneratorDefault implements DiffGenerator {
 	}
 
 	@Override
-	public double quantify( Object expected, Object actual ) {
-		return Equals.evaluate( expected, actual ) ? 1.0 : 0.0;
+	public int quantify( Object expected, Object actual ) {
+		return Equals.evaluate( expected, actual ) ? MAX : MIN;
 	}
 
 }

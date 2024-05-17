@@ -19,12 +19,15 @@ import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.TestFactory;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Stream;
 
 import static com.herbmarshall.base.diff.DiffGeneratorDefault.DEFAULT_MESSAGE;
+import static com.herbmarshall.base.diff.DiffVisualizer.MAX;
+import static com.herbmarshall.base.diff.DiffVisualizer.MIN;
 
 final class DiffVisualizerTest {
 
@@ -97,13 +100,13 @@ final class DiffVisualizerTest {
 			String actual = randomString();
 			String expected = randomString();
 			return Stream.of(
-				defaultValue( "Both null",     null,         null,             1.0 ),
-				defaultValue( "Null Actual",   expected,     null,             0.0 ),
-				defaultValue( "Null expected", null,         actual,           0.0 ),
-				defaultValue( "Wrong Type",    randomUUID(), actual,           0.0 ),
-				defaultValue( "Different",     expected,     actual,           0.0 ),
-				defaultValue( "Same ref",      expected,     expected,         1.0 ),
-				defaultValue( "Same value",    expected,     copy( expected ), 1.0 )
+				defaultValue( "Both null",     null,         null,             MAX ),
+				defaultValue( "Null Actual",   expected,     null,             MIN ),
+				defaultValue( "Null expected", null,         actual,           MIN ),
+				defaultValue( "Wrong Type",    randomUUID(), actual,           MIN ),
+				defaultValue( "Different",     expected,     actual,           MIN ),
+				defaultValue( "Same ref",      expected,     expected,         MAX ),
+				defaultValue( "Same value",    expected,     copy( expected ), MAX )
 			);
 		}
 
@@ -138,7 +141,7 @@ final class DiffVisualizerTest {
 				// Arrange
 				DiffGeneratorStub generator = new DiffGeneratorStub();
 				DiffVisualizer.setGenerator( generator );
-				double expectedOutput = randomDouble();
+				int expectedOutput = randomInt();
 				generator.addOutput( expectedOutput );
 				// Act
 				double output = DiffVisualizer.quantify( expected, actual );
@@ -169,8 +172,8 @@ final class DiffVisualizerTest {
 		return UUID.randomUUID();
 	}
 
-	private double randomDouble() {
-		return Math.random();
+	private int randomInt() {
+		return Instant.now().getNano();
 	}
 
 }

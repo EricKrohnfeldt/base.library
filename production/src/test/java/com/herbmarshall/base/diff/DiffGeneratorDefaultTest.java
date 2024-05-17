@@ -23,6 +23,8 @@ import java.util.stream.Stream;
 
 import static com.herbmarshall.base.diff.DiffGeneratorDefault.DEFAULT_MESSAGE;
 import static com.herbmarshall.base.diff.DiffGeneratorDefault.INSTANCE;
+import static com.herbmarshall.base.diff.DiffVisualizer.MAX;
+import static com.herbmarshall.base.diff.DiffVisualizer.MIN;
 
 final class DiffGeneratorDefaultTest {
 
@@ -32,12 +34,12 @@ final class DiffGeneratorDefaultTest {
 		String actual = randomString();
 		String expected = randomString();
 		return Stream.of(
-			default_quantify( "both null",  null,     null,             1.0 ),
-			default_quantify( "left null",  null,     actual,           0.0 ),
-			default_quantify( "right null", expected, null,             0.0 ),
-			default_quantify( "wrong type", expected, new Object(),     0.0 ),
-			default_quantify( "different",  expected, actual,           0.0 ),
-			default_quantify( "same",       expected, copy( expected ), 1.0 )
+			default_quantify( "both null",  null,     null,             MAX ),
+			default_quantify( "left null",  null,     actual,           MIN ),
+			default_quantify( "right null", expected, null,             MIN ),
+			default_quantify( "wrong type", expected, new Object(),     MIN ),
+			default_quantify( "different",  expected, actual,           MIN ),
+			default_quantify( "same",       expected, copy( expected ), MAX )
 		);
 	}
 
@@ -83,12 +85,12 @@ final class DiffGeneratorDefaultTest {
 		String actual = randomString();
 		String expected = randomString();
 		return Stream.of(
-			quantify( "both null",  null,     null,             1.0 ),
-			quantify( "left null",  null,     actual,           0.0 ),
-			quantify( "right null", expected, null,             0.0 ),
-			quantify( "wrong type", expected, new Object(),     0.0 ),
-			quantify( "different",  expected, actual,           0.0 ),
-			quantify( "same",       expected, copy( expected ), 1.0 )
+			quantify( "both null",  null,     null,             MAX ),
+			quantify( "left null",  null,     actual,           MIN ),
+			quantify( "right null", expected, null,             MIN ),
+			quantify( "wrong type", expected, new Object(),     MIN ),
+			quantify( "different",  expected, actual,           MIN ),
+			quantify( "same",       expected, copy( expected ), MAX )
 		);
 	}
 

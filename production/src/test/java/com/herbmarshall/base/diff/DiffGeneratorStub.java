@@ -29,7 +29,7 @@ final class DiffGeneratorStub implements DiffGenerator {
 
 	private final List<Object> quantifyExpectedInputs = new ArrayList<>();
 	private final List<Object> quantifyActualInputs = new ArrayList<>();
-	private final Queue<Double> quantifyOutputs = new LinkedList<>();
+	private final Queue<Integer> quantifyOutputs = new LinkedList<>();
 
 	@Override
 	public String diff( Object expected, Object actual ) {
@@ -43,13 +43,13 @@ final class DiffGeneratorStub implements DiffGenerator {
 	}
 
 	@Override
-	public double quantify( Object expected, Object actual ) {
+	public int quantify( Object expected, Object actual ) {
 		quantifyExpectedInputs.add( expected );
 		quantifyActualInputs.add( actual );
 		return quantifyOutputs.remove();
 	}
 
-	void addOutput( double value ) {
+	void addOutput( int value ) {
 		quantifyOutputs.add( value );
 	}
 

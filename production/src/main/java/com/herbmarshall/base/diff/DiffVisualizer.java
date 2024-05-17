@@ -19,6 +19,9 @@ import java.util.Objects;
 /** Module to generate a diff visualization of two objects. */
 public final class DiffVisualizer {
 
+	public static final int MAX = 10_000;
+	public static final int MIN = 0;
+
 	private static DiffGenerator generator;
 
 	static {
@@ -38,11 +41,14 @@ public final class DiffVisualizer {
 
 	/**
 	 * Quantify the difference between two objects.
+	 * Value will be from {@value MIN} to {@value MAX}.
 	 * @param expected The expected value to compare with.
 	 * @param actual The actual value to compare to.
 	 * @return The quantified difference between the expected and actual values.
+	 * @see DiffVisualizer#MAX
+	 * @see DiffVisualizer#MIN
 	 */
-	public static double quantify( Object expected, Object actual ) {
+	public static int quantify( Object expected, Object actual ) {
 		return generator.quantify( expected, actual );
 	}
 
