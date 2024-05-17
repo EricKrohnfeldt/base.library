@@ -16,6 +16,7 @@ package com.herbmarshall.base.diff;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.TestFactory;
 
 import java.util.ArrayList;
@@ -23,60 +24,130 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Stream;
 
+import static com.herbmarshall.base.diff.DiffGeneratorDefault.DEFAULT_MESSAGE;
+
 final class DiffVisualizerTest {
 
-	@TestFactory
-	Stream<DynamicTest> defaultDiff() {
-		String actual = randomString();
-		String expected = randomString();
-		return Stream.of(
-			defaultDiff( "Same", expected, expected ),
-			defaultDiff( "Different", expected, actual ),
-			defaultDiff( "Wrong Type", randomUUID(), actual ),
-			defaultDiff( "Null Actual", expected, null ),
-			defaultDiff( "Null expected", null, actual ),
-			defaultDiff( "Both null", null, null )
-		);
+	@Nested
+	class generate {
+
+		@TestFactory
+		Stream<DynamicTest> defaultValue() {
+			String actual = randomString();
+			String expected = randomString();
+			return Stream.of(
+				defaultValue( "Both null",     null,         null             ),
+				defaultValue( "Null Actual",   expected,     null             ),
+				defaultValue( "Null expected", null,         actual           ),
+				defaultValue( "Wrong Type",    randomUUID(), actual           ),
+				defaultValue( "Different",     expected,     actual           ),
+				defaultValue( "Same ref",      expected,     expected         ),
+				defaultValue( "Same ref",      expected,     copy( expected ) )
+			);
+		}
+
+		private DynamicTest defaultValue( String name, Object expected, Object actual ) {
+			return DynamicTest.dynamicTest( name, () -> {
+				// Arrange
+				DiffVisualizer.setGenerator( null );
+				// Act
+				String output = DiffVisualizer.generate( expected, actual );
+				// Assert
+				Assertions.assertEquals( DEFAULT_MESSAGE, output );
+			} );
+		}
+
+		@TestFactory
+		Stream<DynamicTest> custom() {
+			String actual = randomString();
+			String expected = randomString();
+			return Stream.of(
+				custom( "Both null",     null,         null             ),
+				custom( "Null Actual",   expected,     null             ),
+				custom( "Null expected", null,         actual           ),
+				custom( "Wrong Type",    randomUUID(), actual           ),
+				custom( "Different",     expected,     actual           ),
+				custom( "Same ref",      expected,     expected         ),
+				custom( "Same ref",      expected,     copy( expected ) )
+			);
+		}
+
+		private DynamicTest custom( String name, Object expected, Object actual ) {
+			return DynamicTest.dynamicTest( name, () -> {
+				// Arrange
+				DiffGeneratorStub generator = new DiffGeneratorStub();
+				DiffVisualizer.setGenerator( generator );
+				String expectedOutput = randomString() + expected + actual;
+				generator.addOutput( expectedOutput );
+				// Act
+				String output = DiffVisualizer.generate( expected, actual );
+				// Assert
+				Assertions.assertEquals( expectedOutput, output );
+				generator.validateDiff( wrap( expected ), wrap( actual ) );
+			} );
+		}
+
 	}
 
-	private DynamicTest defaultDiff( String name, Object expected, Object actual ) {
-		return DynamicTest.dynamicTest( name, () -> {
-			// Arrange
-			DiffVisualizer.setGenerator( null );
-			// Act
-			String output = DiffVisualizer.generate( expected, actual );
-			// Assert
-			Assertions.assertEquals( DiffVisualizer.DEFAULT_MESSAGE, output );
-		} );
-	}
+	@Nested
+	class quantify {
 
-	@TestFactory
-	Stream<DynamicTest> customDiff() {
-		String actual = randomString();
-		String expected = randomString();
-		return Stream.of(
-			customDiff( "Same", expected, expected ),
-			customDiff( "Different", expected, actual ),
-			customDiff( "Wrong Type", randomUUID(), actual ),
-			customDiff( "Null Actual", expected, null ),
-			customDiff( "Null expected", null, actual ),
-			customDiff( "Both null", null, null )
-		);
-	}
+		@TestFactory
+		Stream<DynamicTest> defaultValue() {
+			String actual = randomString();
+			String expected = randomString();
+			return Stream.of(
+				defaultValue( "Both null",     null,         null,             1.0 ),
+				defaultValue( "Null Actual",   expected,     null,             0.0 ),
+				defaultValue( "Null expected", null,         actual,           0.0 ),
+				defaultValue( "Wrong Type",    randomUUID(), actual,           0.0 ),
+				defaultValue( "Different",     expected,     actual,           0.0 ),
+				defaultValue( "Same ref",      expected,     expected,         1.0 ),
+				defaultValue( "Same value",    expected,     copy( expected ), 1.0 )
+			);
+		}
 
-	private DynamicTest customDiff( String name, Object expected, Object actual ) {
-		return DynamicTest.dynamicTest( name, () -> {
-			// Arrange
-			DiffGeneratorStub generator = new DiffGeneratorStub();
-			DiffVisualizer.setGenerator( generator );
-			String expectedOutput = randomString() + expected  + actual;
-			generator.addOuptut( expectedOutput );
-			// Act
-			String output = DiffVisualizer.generate( expected, actual );
-			// Assert
-			Assertions.assertEquals( expectedOutput, output );
-			generator.validate( wrap( expected ), wrap( actual ) );
-		} );
+		private DynamicTest defaultValue( String name, Object expected, Object actual, double expectedOutput ) {
+			return DynamicTest.dynamicTest( name, () -> {
+				// Arrange
+				DiffVisualizer.setGenerator( null );
+				// Act
+				double output = DiffVisualizer.quantify( expected, actual );
+				// Assert
+				Assertions.assertEquals( expectedOutput, output );
+			} );
+		}
+
+		@TestFactory
+		Stream<DynamicTest> custom() {
+			String actual = randomString();
+			String expected = randomString();
+			return Stream.of(
+				custom( "Both null",     null,         null             ),
+				custom( "Null Actual",   expected,     null             ),
+				custom( "Null expected", null,         actual           ),
+				custom( "Wrong Type",    randomUUID(), actual           ),
+				custom( "Different",     expected,     actual           ),
+				custom( "Same ref",      expected,     expected         ),
+				custom( "Same ref",      expected,     copy( expected ) )
+			);
+		}
+
+		private DynamicTest custom( String name, Object expected, Object actual ) {
+			return DynamicTest.dynamicTest( name, () -> {
+				// Arrange
+				DiffGeneratorStub generator = new DiffGeneratorStub();
+				DiffVisualizer.setGenerator( generator );
+				double expectedOutput = randomDouble();
+				generator.addOutput( expectedOutput );
+				// Act
+				double output = DiffVisualizer.quantify( expected, actual );
+				// Assert
+				Assertions.assertEquals( expectedOutput, output );
+				generator.validateQuantify( wrap( expected ), wrap( actual ) );
+			} );
+		}
+
 	}
 
 	private List<Object> wrap( Object obj ) {
@@ -89,8 +160,17 @@ final class DiffVisualizerTest {
 		return UUID.randomUUID().toString();
 	}
 
+	private String copy( String value ) {
+		//noinspection StringOperationCanBeSimplified
+		return new String( value );
+	}
+
 	private UUID randomUUID() {
 		return UUID.randomUUID();
+	}
+
+	private double randomDouble() {
+		return Math.random();
 	}
 
 }

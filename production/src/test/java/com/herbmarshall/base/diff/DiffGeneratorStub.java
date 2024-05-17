@@ -23,24 +23,44 @@ import java.util.Queue;
 
 final class DiffGeneratorStub implements DiffGenerator {
 
-	private final List<Object> expectedInputs = new ArrayList<>();
-	private final List<Object> actualInputs = new ArrayList<>();
-	private final Queue<String> outputs = new LinkedList<>();
+	private final List<Object> diffExpectedInputs = new ArrayList<>();
+	private final List<Object> diffActualInputs = new ArrayList<>();
+	private final Queue<String> diffOutputs = new LinkedList<>();
+
+	private final List<Object> quantifyExpectedInputs = new ArrayList<>();
+	private final List<Object> quantifyActualInputs = new ArrayList<>();
+	private final Queue<Double> quantifyOutputs = new LinkedList<>();
 
 	@Override
 	public String diff( Object expected, Object actual ) {
-		expectedInputs.add( expected );
-		actualInputs.add( actual );
-		return outputs.remove();
+		diffExpectedInputs.add( expected );
+		diffActualInputs.add( actual );
+		return diffOutputs.remove();
 	}
 
-	void addOuptut( String value ) {
-		outputs.add( value );
+	void addOutput( String value ) {
+		diffOutputs.add( value );
 	}
 
-	void validate( List<Object> expected, List<Object> actual ) {
-		Assertions.assertEquals( expected, expectedInputs );
-		Assertions.assertEquals( actual, actualInputs );
+	@Override
+	public double quantify( Object expected, Object actual ) {
+		quantifyExpectedInputs.add( expected );
+		quantifyActualInputs.add( actual );
+		return quantifyOutputs.remove();
+	}
+
+	void addOutput( double value ) {
+		quantifyOutputs.add( value );
+	}
+
+	void validateDiff( List<Object> expected, List<Object> actual ) {
+		Assertions.assertEquals( expected, diffExpectedInputs );
+		Assertions.assertEquals( actual, diffActualInputs );
+	}
+
+	void validateQuantify( List<Object> expected, List<Object> actual ) {
+		Assertions.assertEquals( expected, quantifyExpectedInputs );
+		Assertions.assertEquals( actual, quantifyActualInputs );
 	}
 
 }

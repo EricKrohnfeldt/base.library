@@ -25,4 +25,16 @@ public interface DiffGenerator {
 	 */
 	String diff( Object expected, Object actual );
 
+	/**
+	 * Quantify the difference between two objects.
+	 * @param expected The expected value to compare with.
+	 * @param actual The actual value to compare to.
+	 * @return The quantified difference between the expected and actual values.
+	 */
+	// TODO Remove this default on 2.0 <a href="https://herbmarshall.atlassian.net/browse/UTIL-353">UTIL-353</a>.
+	default double quantify( Object expected, Object actual ) {
+		// TODO Remove default implementation
+		return DiffGeneratorDefault.INSTANCE.quantify( expected, actual );
+	}
+
 }

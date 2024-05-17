@@ -19,7 +19,6 @@ import java.util.Objects;
 /** Module to generate a diff visualization of two objects. */
 public final class DiffVisualizer {
 
-	static final String DEFAULT_MESSAGE = "No diff generated, please set DiffGenerator";
 	private static DiffGenerator generator;
 
 	static {
@@ -38,13 +37,23 @@ public final class DiffVisualizer {
 	}
 
 	/**
+	 * Quantify the difference between two objects.
+	 * @param expected The expected value to compare with.
+	 * @param actual The actual value to compare to.
+	 * @return The quantified difference between the expected and actual values.
+	 */
+	public static double quantify( Object expected, Object actual ) {
+		return generator.quantify( expected, actual );
+	}
+
+	/**
 	 * Set the {@link DiffGenerator} to use for display.
 	 * @param generator The {@link DiffGenerator} to use.  {@code null} value will set to default
 	 */
 	public static void setGenerator( DiffGenerator generator ) {
 		DiffVisualizer.generator = Objects.requireNonNullElse(
 			generator,
-			( expected, actual ) -> DEFAULT_MESSAGE
+			DiffGeneratorDefault.INSTANCE
 		);
 	}
 
