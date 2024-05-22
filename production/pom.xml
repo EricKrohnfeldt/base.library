@@ -19,11 +19,11 @@
 	<parent>
 		<groupId>   com.herbmarshall   </groupId>
 		<artifactId>        base.pom   </artifactId>
-		<version>      1.22-SNAPSHOT   </version>
+		<version>      1.22   </version>
 	</parent>
 
 	<artifactId>         base   </artifactId>
-	<version>   1.22-SNAPSHOT   </version>
+	<version>   1.22   </version>
 	<packaging>           jar   </packaging>
 
 	<properties>
