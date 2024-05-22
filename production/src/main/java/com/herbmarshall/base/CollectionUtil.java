@@ -14,7 +14,10 @@
 
 package com.herbmarshall.base;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
@@ -84,6 +87,28 @@ public final class CollectionUtil {
 		for ( E element : collection )
 			lastElement = element;
 		return Optional.ofNullable( lastElement );
+	}
+
+	/**
+	 * Creates a new copy of the given {@link List}, handling {@code null} values safely.
+	 * @param list the {@link List} to be copied
+	 * @param <E> the type of elements in the {@link List}
+	 * @return a new copy of the given {@link List}
+	 */
+	public static <E> List<E> copyNullSafe( List<E> list ) {
+		//noinspection Java9CollectionFactory
+		return Collections.unmodifiableList( new ArrayList<>( list ) );
+	}
+
+	/**
+	 * Creates a new copy of the given {@link Set}, handling {@code null} values safely.
+	 * @param set the {@link Set} to be copied
+	 * @param <E> the type of elements in the {@link Set}
+	 * @return a new copy of the given {@link Set}
+	 */
+	public static <E> Set<E> copyNullSafe( Set<E> set ) {
+		//noinspection Java9CollectionFactory
+		return Collections.unmodifiableSet( new HashSet<>( set ) );
 	}
 
 }

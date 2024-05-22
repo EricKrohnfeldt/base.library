@@ -255,6 +255,213 @@ class CollectionUtilTest {
 
 	}
 
+	@Nested
+	class copyNullSafe_list {
+
+		@Test
+		void empty() {
+			// Arrange
+			List<Object> expected = List.of();
+			// Act
+			List<Object> output = CollectionUtil.copyNullSafe( expected );
+			// Assert
+			Assertions.assertTrue( output.isEmpty() );
+		}
+
+		@Test
+		void oneNull() {
+			// Arrange
+			List<Object> expected = new ArrayList<>();
+			expected.add( null );
+			// Act
+			List<Object> output = CollectionUtil.copyNullSafe( expected );
+			// Assert
+			Assertions.assertEquals( expected, output );
+			Assertions.assertNotSame( expected, output );
+		}
+
+		@Test
+		void oneNonNull() {
+			// Arrange
+			List<Object> expected = List.of( random() );
+			// Act
+			List<Object> output = CollectionUtil.copyNullSafe( expected );
+			// Assert
+			Assertions.assertEquals( expected, output );
+			Assertions.assertNotSame( expected, output );
+		}
+
+		@Test
+		void noNulls() {
+			// Arrange
+			List<Object> expected = List.of(
+				random(),
+				random(),
+				random()
+			);
+			// Act
+			List<Object> output = CollectionUtil.copyNullSafe( expected );
+			// Assert
+			Assertions.assertEquals( expected, output );
+			Assertions.assertNotSame( expected, output );
+		}
+
+		@Test
+		void onlyNulls() {
+			// Arrange
+			List<Object> expected = new ArrayList<>();
+			expected.add( null );
+			expected.add( null );
+			expected.add( null );
+			// Act
+			List<Object> output = CollectionUtil.copyNullSafe( expected );
+			// Assert
+			Assertions.assertEquals( expected, output );
+			Assertions.assertNotSame( expected, output );
+		}
+
+		@Test
+		void mixed() {
+			// Arrange
+			List<Object> expected = new ArrayList<>();
+			expected.add( random() );
+			expected.add( null );
+			expected.add( random() );
+			expected.add( null );
+			expected.add( random() );
+			// Act
+			List<Object> output = CollectionUtil.copyNullSafe( expected );
+			// Assert
+			Assertions.assertEquals( expected, output );
+			Assertions.assertNotSame( expected, output );
+		}
+
+		@Test
+		void modification() {
+			// Arrange
+			List<Object> source = new ArrayList<>();
+			source.add( random() );
+			source.add( random() );
+			List<Object> copy = CollectionUtil.copyNullSafe( source );
+			// Act
+			try {
+				//noinspection DataFlowIssue
+				copy.add( random() );
+				Assertions.fail();
+			}
+			// Assert
+			catch ( UnsupportedOperationException ignored ) {
+			}
+		}
+
+		@Test
+		void postModification() {
+			// Arrange
+			Object value = random();
+			List<Object> source = new ArrayList<>();
+			source.add( random() );
+			source.add( random() );
+			List<Object> copy = CollectionUtil.copyNullSafe( source );
+			// Act
+			source.add( value );
+			// Assert
+			Assertions.assertFalse( copy.contains( value ) );
+		}
+
+	}
+
+	@Nested
+	class copyNulLSafe_set {
+
+		@Test
+		void empty() {
+			// Arrange
+			Set<Object> expected = Set.of();
+			// Act
+			Set<Object> output = CollectionUtil.copyNullSafe( expected );
+			// Assert
+			Assertions.assertTrue( output.isEmpty() );
+		}
+
+		@Test
+		void noNulls() {
+			// Arrange
+			Set<Object> expected = Set.of(
+				random(),
+				random(),
+				random()
+			);
+			// Act
+			Set<Object> output = CollectionUtil.copyNullSafe( expected );
+			// Assert
+			Assertions.assertEquals( expected, output );
+			Assertions.assertNotSame( expected, output );
+		}
+
+		@Test
+		void onlyNulls() {
+			// Arrange
+			Set<Object> expected = new HashSet<>();
+			expected.add( null );
+			expected.add( null );
+			expected.add( null );
+			// Act
+			Set<Object> output = CollectionUtil.copyNullSafe( expected );
+			// Assert
+			Assertions.assertEquals( expected, output );
+			Assertions.assertNotSame( expected, output );
+		}
+
+		@Test
+		void mixed() {
+			// Arrange
+			Set<Object> expected = new HashSet<>();
+			expected.add( random() );
+			expected.add( null );
+			expected.add( random() );
+			expected.add( null );
+			expected.add( random() );
+			// Act
+			Set<Object> output = CollectionUtil.copyNullSafe( expected );
+			// Assert
+			Assertions.assertEquals( expected, output );
+			Assertions.assertNotSame( expected, output );
+		}
+
+		@Test
+		void modification() {
+			// Arrange
+			Set<Object> source = new HashSet<>();
+			source.add( random() );
+			source.add( random() );
+			Set<Object> copy = CollectionUtil.copyNullSafe( source );
+			// Act
+			try {
+				//noinspection DataFlowIssue
+				copy.add( random() );
+				Assertions.fail();
+			}
+			// Assert
+			catch ( UnsupportedOperationException ignored ) {
+			}
+		}
+
+		@Test
+		void postModification() {
+			// Arrange
+			Object value = random();
+			Set<Object> source = new HashSet<>();
+			source.add( random() );
+			source.add( random() );
+			Set<Object> copy = CollectionUtil.copyNullSafe( source );
+			// Act
+			source.add( value );
+			// Assert
+			Assertions.assertFalse( copy.contains( value ) );
+		}
+
+	}
+
 	private Object random() {
 		return UUID.randomUUID();
 	}
