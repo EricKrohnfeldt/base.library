@@ -16,11 +16,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-    <scm>
-		<developerConnection>scm:git:ssh://git.herb.herbmarshall.com/repository/util/base.library</developerConnection>
-		<tag>HEAD</tag>
-	</scm>
-
 	<parent>
 		<groupId>      com.herbmarshall   </groupId>
 		<artifactId>        library.pom   </artifactId>
@@ -43,5 +38,10 @@
 			<url>   https://nexus.herb.herbmarshall.com/repository/maven-public/   </url>
 		</repository>
 	</repositories>
+
+    <scm>
+        <developerConnection>scm:git:ssh://git.herb.herbmarshall.com/repository/util/base.library</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
 
 </project>
