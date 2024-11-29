@@ -27,6 +27,7 @@
 	<packaging>           pom   </packaging>
 
     <modules>
+		<module>    interface   </module>
 		<module>         test   </module>
         <module>   production   </module>
 	</modules>

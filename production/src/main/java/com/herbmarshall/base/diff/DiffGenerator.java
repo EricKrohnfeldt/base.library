@@ -15,6 +15,7 @@
 package com.herbmarshall.base.diff;
 
 /** Module to generate a diff visualization of two objects. */
+// TODO Move to interface module on 2.0 <a href="https://herbmarshall.atlassian.net/browse/UTIL-353">UTIL-353</a>.
 public interface DiffGenerator {
 
 	/**
