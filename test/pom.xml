@@ -27,9 +27,19 @@
 	<packaging>           jar   </packaging>
 
 	<properties>
+
+		<junit.version>   5.9.3   </junit.version>
+
 	</properties>
 
 	<dependencies>
+
+		<dependency>
+			<groupId>      org.junit.jupiter   </groupId>
+			<artifactId>   junit-jupiter-api   </artifactId>
+			<version>       ${junit.version}   </version>
+		</dependency>
+
 	</dependencies>
 
 </project>
