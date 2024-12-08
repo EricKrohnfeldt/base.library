@@ -17,70 +17,40 @@ package com.herbmarshall.base.mock.function;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
 import java.util.UUID;
 
-import static com.herbmarshall.base.mock.function.ConsumerMockish.ERROR_UNCALLED;
-import static com.herbmarshall.base.mock.function.ConsumerMockish.ERROR_UNEXPECTED;
+import static com.herbmarshall.base.mock.function.RunnableMockish.ERROR_UNCALLED;
 
-final class ConsumerMockishTest {
+final class RunnableMockishTest {
 
 	@Test
 	void happyPath() {
 		// Arrange
-		UUID value = UUID.randomUUID();
-		ConsumerMockish<UUID> mock = new ConsumerMockish<>();
-		ConsumerMockish<UUID> expectOutput = mock.expect( value );
+		RunnableMockish mock = new RunnableMockish();
+		RunnableMockish expectOutput = mock.expect();
 		// Act
-		mock.accept( value );
-		mock.validate();
-		// Assert
-		Assertions.assertSame( mock, expectOutput );
-	}
-
-	/** Actual 'called' without 'expects'. */
-	@Test
-	void unexpectedValue() {
-		// Arrange
-		UUID value = UUID.randomUUID();
-		ConsumerMockish<UUID> mock = new ConsumerMockish<>();
-		// Act
-		try {
-			mock.accept( value );
-			Assertions.fail();
-		}
-		// Assert
-		catch ( AssertionError e ) {
-			assertErrorMessage(
-				ERROR_UNEXPECTED.formatted( value ),
-				e
-			);
-		}
-	}
-
-	@Test
-	void nullValue() {
-		// Arrange
-		ConsumerMockish<UUID> mock = new ConsumerMockish<>();
-		ConsumerMockish<UUID> expectOutput = mock.expect( null );
-		// Act
-		mock.accept( null );
+		mock.run();
 		mock.validate();
 		// Assert
 		Assertions.assertSame( mock, expectOutput );
 	}
 
 	@Test
-	void nullValueMultiple() {
+	void multipleCalls() {
 		// Arrange
-		UUID value = UUID.randomUUID();
-		ConsumerMockish<UUID> mock = new ConsumerMockish<>();
-		ConsumerMockish<UUID> expectOutput = mock
-			.expect( null )
-			.expect( null );
+		RunnableMockish mock = new RunnableMockish();
+		RunnableMockish expectOutput = mock
+			.expect()    // 1
+			.expect()    // 2
+			.expect()    // 3
+			.expect()    // 4
+			.expect();   // 5
 		// Act
-		mock.accept( null );
-		mock.accept( null );
+		mock.run();   // 1
+		mock.run();   // 2
+		mock.run();   // 3
+		mock.run();   // 4
+		mock.run();   // 5
 		mock.validate();
 		// Assert
 		Assertions.assertSame( mock, expectOutput );
@@ -92,10 +62,10 @@ final class ConsumerMockishTest {
 		// Arrange
 		UUID valueA = UUID.randomUUID();
 		UUID valueB = UUID.randomUUID();
-		ConsumerMockish<UUID> mock = new ConsumerMockish<>();
-		ConsumerMockish<UUID> expectOutput = mock
-			.expect( valueA )
-			.expect( valueB );
+		RunnableMockish mock = new RunnableMockish();
+		RunnableMockish expectOutput = mock
+			.expect()    // 1
+			.expect();   // 2
 		// Act
 		try {
 			mock.validate();
@@ -104,9 +74,7 @@ final class ConsumerMockishTest {
 		// Assert
 		catch ( AssertionError e ) {
 			assertErrorMessage(
-				ERROR_UNCALLED.formatted(
-					List.of( valueA, valueB )
-				),
+				ERROR_UNCALLED.formatted( 2 ),
 				e
 			);
 		}
