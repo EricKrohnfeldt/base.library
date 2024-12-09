@@ -20,8 +20,8 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.UUID;
 
-import static com.herbmarshall.base.mock.function.ConsumerMockish.ERROR_UNCALLED;
-import static com.herbmarshall.base.mock.function.ConsumerMockish.ERROR_UNEXPECTED;
+import static com.herbmarshall.base.mock.function.ConsumerMockish.error_uncalled;
+import static com.herbmarshall.base.mock.function.ConsumerMockish.error_unexpectedCall;
 
 final class ConsumerMockishTest {
 
@@ -52,7 +52,7 @@ final class ConsumerMockishTest {
 		// Assert
 		catch ( AssertionError e ) {
 			assertErrorMessage(
-				ERROR_UNEXPECTED.formatted( value ),
+				error_unexpectedCall( value ),
 				e
 			);
 		}
@@ -104,7 +104,7 @@ final class ConsumerMockishTest {
 		// Assert
 		catch ( AssertionError e ) {
 			assertErrorMessage(
-				ERROR_UNCALLED.formatted(
+				error_uncalled(
 					List.of( valueA, valueB )
 				),
 				e

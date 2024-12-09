@@ -19,7 +19,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
 
-import static com.herbmarshall.base.mock.function.RunnableMockish.ERROR_UNCALLED;
+import static com.herbmarshall.base.mock.function.RunnableMockish.error_uncalled;
+import static com.herbmarshall.base.mock.function.RunnableMockish.error_unexpectedCall;
 
 final class RunnableMockishTest {
 
@@ -56,6 +57,24 @@ final class RunnableMockishTest {
 		Assertions.assertSame( mock, expectOutput );
 	}
 
+	@Test
+	void unexpected() {
+		// Arrange
+		RunnableMockish mock = new RunnableMockish();
+		// Act
+		try {
+			mock.run();
+			Assertions.fail();
+		}
+		// Assert
+		catch ( IllegalStateException e ) {
+			assertErrorMessage(
+				error_unexpectedCall(),
+				e
+			);
+		}
+	}
+
 	/** Expects but no 'called'. */
 	@Test
 	void validationFailed() {
@@ -74,7 +93,7 @@ final class RunnableMockishTest {
 		// Assert
 		catch ( AssertionError e ) {
 			assertErrorMessage(
-				ERROR_UNCALLED.formatted( 2 ),
+				error_uncalled( 2 ),
 				e
 			);
 		}

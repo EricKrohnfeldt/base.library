@@ -28,9 +28,6 @@ public final class ConsumerMockish<T>
 	// extends Mockish
 	implements Consumer<T> {
 
-	static final String ERROR_UNEXPECTED = "Did not find expected value: %s";
-	static final String ERROR_UNCALLED = "Did not call 'accept' for all expectations: %s";
-
 	private final List<T> expected = new ArrayList<>();
 
 	/** Prepare for expected call. */
@@ -43,15 +40,23 @@ public final class ConsumerMockish<T>
 	public void accept( T t ) {
 		Assertions.assertTrue(
 			expected.remove( t ),
-			ERROR_UNEXPECTED.formatted( t )
+			error_unexpectedCall( t )
 		);
 	}
 
 	void validate() {
 		Assertions.assertTrue(
 			expected.isEmpty(),
-			ERROR_UNCALLED.formatted( expected )
+			error_uncalled( expected )
 		);
+	}
+
+	static String error_unexpectedCall( Object value ) {
+		return "Did not find expected value: " + value;
+	}
+
+	static String error_uncalled( List<?> values ) {
+		return "Did not call 'accept' for all expectations: " + values;
 	}
 
 }

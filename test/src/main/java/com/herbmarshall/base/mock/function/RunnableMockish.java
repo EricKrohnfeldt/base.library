@@ -21,8 +21,6 @@ public final class RunnableMockish
 	// extends Mockish
 	implements Runnable {
 
-	static final String ERROR_UNCALLED = "Did not call 'accept' for all expectations: %s";
-
 	private int count = 0;
 
 	/** Prepare for expected call. */
@@ -33,15 +31,24 @@ public final class RunnableMockish
 
 	@Override
 	public void run() {
-		count--;
+		if ( --count < 0 )
+			throw new IllegalStateException( error_unexpectedCall() );
 	}
 
 	void validate() {
 		Assertions.assertEquals(
 			0,
 			count,
-			ERROR_UNCALLED.formatted( count )
+			error_uncalled( count )
 		);
+	}
+
+	static String error_unexpectedCall() {
+		return "Did expect call to 'run'";
+	}
+
+	static String error_uncalled( int count ) {
+		return "Did not call 'run' for all expectations: " + count;
 	}
 
 }
