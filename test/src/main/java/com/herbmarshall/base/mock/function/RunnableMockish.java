@@ -35,7 +35,8 @@ public final class RunnableMockish
 			throw new IllegalStateException( error_unexpectedCall() );
 	}
 
-	void validate() {
+	@Override
+	public void validate() {
 		Assertions.assertEquals(
 			0,
 			count,
@@ -44,7 +45,7 @@ public final class RunnableMockish
 	}
 
 	static String error_unexpectedCall() {
-		return "Did expect call to 'run'";
+		return "Did not expect call to 'run'";
 	}
 
 	static String error_uncalled( int count ) {

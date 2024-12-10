@@ -44,7 +44,8 @@ public final class ConsumerMockish<T>
 		);
 	}
 
-	void validate() {
+	@Override
+	protected void validate() {
 		Assertions.assertTrue(
 			expected.isEmpty(),
 			error_uncalled( expected )
