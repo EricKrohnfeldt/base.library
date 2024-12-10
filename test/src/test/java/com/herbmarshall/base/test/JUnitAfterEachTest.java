@@ -33,6 +33,56 @@ final class JUnitAfterEachTest {
 	}
 
 	@Nested
+	class addCallback {
+
+		@Test
+		void happyPath() {
+			// Arrange
+			RunnableMockish callback = new RunnableMockish();
+			JUnitAfterEach.addCallback( callback );
+			callback.expect();
+			// Act
+			afterEach();
+			// Assert
+			callback.validate();
+			JUnitAfterEach.removeCallback( callback );
+		}
+
+		@Test
+		void duplicateCallback() {
+			// Arrange
+			RunnableMockish callback = new RunnableMockish();
+			JUnitAfterEach.addCallback( callback );
+			// Act
+			try {
+				JUnitAfterEach.addCallback( callback );
+				Assertions.fail();
+			}
+			// Assert
+			catch ( IllegalStateException e ) {
+				assertErrorMessage(
+					error_duplicate( callback ),
+					e
+				);
+			}
+			JUnitAfterEach.removeCallback( callback );
+		}
+
+		@Test
+		void nullCallback() {
+			// Act
+			try {
+				JUnitAfterEach.addCallback( null );
+				Assertions.fail();
+			}
+			// Assert
+			catch ( NullPointerException ignored ) {
+			}
+		}
+
+	}
+
+	@Nested
 	class removeCallback {
 
 		@Test
@@ -64,39 +114,18 @@ final class JUnitAfterEachTest {
 			}
 		}
 
-	}
-
-	@Test
-	void duplicateCallback() {
-		// Arrange
-		RunnableMockish callback = new RunnableMockish();
-		JUnitAfterEach.addCallback( callback );
-		// Act
-		try {
-			JUnitAfterEach.addCallback( callback );
-			Assertions.fail();
+		@Test
+		void nullCallback() {
+			// Act
+			try {
+				JUnitAfterEach.removeCallback( null );
+				Assertions.fail();
+			}
+			// Assert
+			catch ( NullPointerException ignored ) {
+			}
 		}
-		// Assert
-		catch ( IllegalStateException e ) {
-			assertErrorMessage(
-				error_duplicate( callback ),
-				e
-			);
-		}
-		JUnitAfterEach.removeCallback( callback );
-	}
 
-	@Test
-	void happyPath() {
-		// Arrange
-		RunnableMockish callback = new RunnableMockish();
-		JUnitAfterEach.addCallback( callback );
-		callback.expect();
-		// Act
-		afterEach();
-		// Assert
-		callback.validate();
-		JUnitAfterEach.removeCallback( callback );
 	}
 
 	// Using this private method because I don't want to repeat the comment about null everywhere.  Yea, I'm high.
