@@ -110,7 +110,6 @@ final class ConsumerMockishTest {
 				e
 			);
 		}
-		// Assert
 		Assertions.assertSame( mock, expectOutput );
 	}
 

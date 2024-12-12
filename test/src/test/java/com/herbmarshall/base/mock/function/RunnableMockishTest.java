@@ -97,7 +97,6 @@ final class RunnableMockishTest {
 				e
 			);
 		}
-		// Assert
 		Assertions.assertSame( mock, expectOutput );
 	}
 

@@ -16,32 +16,36 @@ package com.herbmarshall.base.mock.function;
 
 import org.junit.jupiter.api.Assertions;
 
+import java.util.LinkedList;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Queue;
+
 /** A mock for {@link Runnable} interface. */
-public final class RunnableMockish
+final class RunnableMockishFailing
 	// extends Mockish
 	implements Runnable {
 
-	private int count = 0;
+	private final Queue<RuntimeException> exceptions = new LinkedList<>();
 
 	/** Prepare for expected call. */
-	public RunnableMockish expect() {
-		count++;
+	public RunnableMockishFailing expect( RuntimeException exception ) {
+		exceptions.add( Objects.requireNonNull( exception ) );
 		return this;
 	}
 
 	@Override
 	public void run() {
-		if ( --count < 0 )
-			throw new IllegalStateException( error_unexpectedCall() );
+		throw Optional.ofNullable( exceptions.poll() )
+			.orElseThrow( () -> new IllegalStateException( error_unexpectedCall() ) );
 	}
 
 	// @Override
 	/** Validate this mock. */
 	public void validate() {
-		Assertions.assertEquals(
-			0,
-			count,
-			error_uncalled( count )
+		Assertions.assertTrue(
+			exceptions.isEmpty(),
+			error_uncalled( exceptions.size() )
 		);
 	}
 

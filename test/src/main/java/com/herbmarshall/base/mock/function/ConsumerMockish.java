@@ -44,8 +44,9 @@ public final class ConsumerMockish<T>
 		);
 	}
 
-	@Override
-	protected void validate() {
+	// @Override
+	/** Validate this mock. */
+	public void validate() {
 		Assertions.assertTrue(
 			expected.isEmpty(),
 			error_uncalled( expected )
