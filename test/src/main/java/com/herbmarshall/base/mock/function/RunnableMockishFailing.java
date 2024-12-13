@@ -22,7 +22,7 @@ import java.util.Optional;
 import java.util.Queue;
 
 /** A mock for {@link Runnable} interface. */
-final class RunnableMockishFailing
+public final class RunnableMockishFailing
 	// extends Mockish
 	implements Runnable {
 

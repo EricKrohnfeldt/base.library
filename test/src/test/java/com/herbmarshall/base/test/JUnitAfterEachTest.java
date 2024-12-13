@@ -15,22 +15,17 @@
 package com.herbmarshall.base.test;
 
 import com.herbmarshall.base.mock.function.RunnableMockish;
+import com.herbmarshall.base.mock.function.RunnableMockishFailing;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+
+import java.util.UUID;
 
 import static com.herbmarshall.base.test.JUnitAfterEach.error_duplicate;
 import static com.herbmarshall.base.test.JUnitAfterEach.error_unknown;
 
 final class JUnitAfterEachTest {
-
-	private JUnitAfterEach hook;
-
-	@BeforeEach
-	void setup() {
-		hook = new JUnitAfterEach();
-	}
 
 	@Nested
 	class addCallback {
@@ -39,13 +34,37 @@ final class JUnitAfterEachTest {
 		void happyPath() {
 			// Arrange
 			RunnableMockish callback = new RunnableMockish();
-			JUnitAfterEach.addCallback( callback );
-			callback.expect();
-			// Act
-			afterEach();
+			try {
+				JUnitAfterEach.addCallback( callback.expect() );
+				// Act
+				afterEach();
+				// Assert
+				callback.validate();
+			}
+			finally {
+				JUnitAfterEach.removeCallback( callback );
+			}
+		}
+
+		@Test
+		void failingCallback() {
+			// Arrange
+			RuntimeException exception = randomError();
+			RunnableMockishFailing callback = new RunnableMockishFailing()
+				.expect( exception );
+			try {
+				JUnitAfterEach.addCallback( callback );
+				// Act
+				afterEach();
+				Assertions.fail();
+			}
 			// Assert
-			callback.validate();
-			JUnitAfterEach.removeCallback( callback );
+			catch ( RuntimeException e ) {
+				Assertions.assertSame( exception, e );
+			}
+			finally {
+				JUnitAfterEach.removeCallback( callback );
+			}
 		}
 
 		@Test
@@ -65,7 +84,9 @@ final class JUnitAfterEachTest {
 					e
 				);
 			}
-			JUnitAfterEach.removeCallback( callback );
+			finally {
+				JUnitAfterEach.removeCallback( callback );
+			}
 		}
 
 		@Test
@@ -130,7 +151,7 @@ final class JUnitAfterEachTest {
 
 	// Using this private method because I don't want to repeat the comment about null everywhere.  Yea, I'm high.
 	private void afterEach() {
-		hook.afterEach( null );  // Using null here as we don't use context parameter
+		new JUnitAfterEach().afterEach( null );  // Using null here as we don't use context parameter
 	}
 
 	private void assertErrorMessage( String expected, Throwable e ) {
@@ -139,6 +160,10 @@ final class JUnitAfterEachTest {
 			expected,
 			e.getMessage().substring( 0, expected.length() )
 		);
+	}
+
+	private RuntimeException randomError() {
+		return new RuntimeException( UUID.randomUUID().toString() );
 	}
 
 }
