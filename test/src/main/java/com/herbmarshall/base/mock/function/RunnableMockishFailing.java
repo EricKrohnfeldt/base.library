@@ -14,6 +14,7 @@
 
 package com.herbmarshall.base.mock.function;
 
+import com.herbmarshall.base.mock.Mockish;
 import org.junit.jupiter.api.Assertions;
 
 import java.util.LinkedList;
@@ -21,12 +22,28 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Queue;
 
-/** A mock for {@link Runnable} interface. */
+/** A {@link Mockish} for {@link Runnable} interface. */
 public final class RunnableMockishFailing
-	// extends Mockish
+	extends Mockish
 	implements Runnable {
 
 	private final Queue<RuntimeException> exceptions = new LinkedList<>();
+
+	/**
+	 * Create new instance with {@code autoValidate} turned on.
+	 * @see Mockish
+	 */
+	public RunnableMockishFailing() {
+	}
+
+	/**
+	 * Create new instance.
+	 * Set {@code autoValidate} on by passing {@code true}, turn off by passing {@code false}.
+	 * @see Mockish
+	 */
+	public RunnableMockishFailing( boolean autoValidate ) {
+		super( autoValidate );
+	}
 
 	/** Prepare for expected call. */
 	public RunnableMockishFailing expect( RuntimeException exception ) {
@@ -40,8 +57,7 @@ public final class RunnableMockishFailing
 			.orElseThrow( () -> new IllegalStateException( error_unexpectedCall() ) );
 	}
 
-	// @Override
-	/** Validate this mock. */
+	@Override
 	public void validate() {
 		Assertions.assertTrue(
 			exceptions.isEmpty(),

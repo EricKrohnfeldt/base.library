@@ -14,15 +14,36 @@
 
 package com.herbmarshall.base.mock.function;
 
+import com.herbmarshall.base.mock.MockishTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.Map;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 import static com.herbmarshall.base.mock.function.RunnableMockish.error_uncalled;
 import static com.herbmarshall.base.mock.function.RunnableMockish.error_unexpectedCall;
 
-final class RunnableMockishTest {
+final class RunnableMockishTest extends MockishTest<RunnableMockish> {
+
+	@Override
+	protected Map<Supplier<RunnableMockish>, String> constructAuto() {
+		return Map.of(
+			RunnableMockish::new, "No Arg",
+			() -> new RunnableMockish( true ), "Boolean Arg"
+		);
+	}
+
+	@Override
+	protected Map<Supplier<RunnableMockish>, String> constructManual() {
+		return Map.of( () -> new RunnableMockish( false ), "Boolean Arg" );
+	}
+
+	@Override
+	protected Runnable prepareMock( RunnableMockish mock ) {
+		return mock.expect();
+	}
 
 	@Test
 	void happyPath() {
@@ -60,7 +81,7 @@ final class RunnableMockishTest {
 	@Test
 	void unexpected() {
 		// Arrange
-		RunnableMockish mock = new RunnableMockish();
+		RunnableMockish mock = new RunnableMockish( false );
 		// Act
 		try {
 			mock.run();
@@ -81,7 +102,7 @@ final class RunnableMockishTest {
 		// Arrange
 		UUID valueA = UUID.randomUUID();
 		UUID valueB = UUID.randomUUID();
-		RunnableMockish mock = new RunnableMockish();
+		RunnableMockish mock = new RunnableMockish( false );
 		RunnableMockish expectOutput = mock
 			.expect()    // 1
 			.expect();   // 2

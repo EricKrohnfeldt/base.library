@@ -33,7 +33,7 @@ final class JUnitAfterEachTest {
 		@Test
 		void happyPath() {
 			// Arrange
-			RunnableMockish callback = new RunnableMockish();
+			RunnableMockish callback = new RunnableMockish( false );
 			try {
 				JUnitAfterEach.addCallback( callback.expect() );
 				// Act
@@ -50,7 +50,7 @@ final class JUnitAfterEachTest {
 		void failingCallback() {
 			// Arrange
 			RuntimeException exception = randomError();
-			RunnableMockishFailing callback = new RunnableMockishFailing()
+			RunnableMockishFailing callback = new RunnableMockishFailing( false )
 				.expect( exception );
 			try {
 				JUnitAfterEach.addCallback( callback );

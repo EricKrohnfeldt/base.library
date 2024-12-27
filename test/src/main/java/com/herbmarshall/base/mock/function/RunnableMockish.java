@@ -14,14 +14,32 @@
 
 package com.herbmarshall.base.mock.function;
 
+import com.herbmarshall.base.mock.Mockish;
 import org.junit.jupiter.api.Assertions;
 
-/** A mock for {@link Runnable} interface. */
+/** A {@link Mockish} for {@link Runnable} interface. */
 public final class RunnableMockish
-	// extends Mockish
+	extends Mockish
 	implements Runnable {
 
 	private int count = 0;
+
+	/**
+	 * Create new instance with {@code autoValidate} turned on.
+	 * @see Mockish
+	 */
+	public RunnableMockish() {
+		super();
+	}
+
+	/**
+	 * Create new instance.
+	 * Set {@code autoValidate} on by passing {@code true}, turn off by passing {@code false}.
+	 * @see Mockish
+	 */
+	public RunnableMockish( boolean autovalidate ) {
+		super( autovalidate );
+	}
 
 	/** Prepare for expected call. */
 	public RunnableMockish expect() {

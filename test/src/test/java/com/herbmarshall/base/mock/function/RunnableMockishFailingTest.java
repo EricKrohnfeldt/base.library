@@ -14,15 +14,36 @@
 
 package com.herbmarshall.base.mock.function;
 
+import com.herbmarshall.base.mock.MockishFailingTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.Map;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 import static com.herbmarshall.base.mock.function.RunnableMockishFailing.error_uncalled;
 import static com.herbmarshall.base.mock.function.RunnableMockishFailing.error_unexpectedCall;
 
-final class RunnableMockishFailingTest {
+final class RunnableMockishFailingTest extends MockishFailingTest<RunnableMockishFailing> {
+
+	@Override
+	protected Map<Supplier<RunnableMockishFailing>, String> constructAuto() {
+		return Map.of(
+			RunnableMockishFailing::new, "No Arg",
+			() -> new RunnableMockishFailing( true ), "Boolean Arg"
+		);
+	}
+
+	@Override
+	protected Map<Supplier<RunnableMockishFailing>, String> constructManual() {
+		return Map.of( () -> new RunnableMockishFailing( false ), "Boolean Arg" );
+	}
+
+	@Override
+	protected Runnable prepareMock( RunnableMockishFailing mock, RuntimeException exception ) {
+		return mock.expect( exception );
+	}
 
 	@Test
 	void happyPath() {
@@ -101,7 +122,7 @@ final class RunnableMockishFailingTest {
 		// Arrange
 		RuntimeException exceptionA = randomException();
 		RuntimeException exceptionB = randomException();
-		RunnableMockishFailing mock = new RunnableMockishFailing();
+		RunnableMockishFailing mock = new RunnableMockishFailing( false );
 		RunnableMockishFailing expectOutput = mock
 			.expect( exceptionA )
 			.expect( exceptionB );

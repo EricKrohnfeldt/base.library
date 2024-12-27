@@ -14,16 +14,40 @@
 
 package com.herbmarshall.base.mock.function;
 
+import com.herbmarshall.base.mock.MockishTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 import static com.herbmarshall.base.mock.function.ConsumerMockish.error_uncalled;
 import static com.herbmarshall.base.mock.function.ConsumerMockish.error_unexpectedCall;
 
-final class ConsumerMockishTest {
+final class ConsumerMockishTest extends MockishTest<ConsumerMockish<UUID>> {
+
+	@Override
+	protected Map<Supplier<ConsumerMockish<UUID>>, String> constructAuto() {
+		return Map.of(
+			ConsumerMockish::new, "No Arg",
+			() -> new ConsumerMockish<>( true ), "Boolean Arg"
+		);
+
+	}
+
+	@Override
+	protected Map<Supplier<ConsumerMockish<UUID>>, String> constructManual() {
+		return Map.of( () -> new ConsumerMockish<>( false ), "Boolean Arg" );
+	}
+
+	@Override
+	protected Runnable prepareMock( ConsumerMockish<UUID> mock ) {
+		UUID uuid = UUID.randomUUID();
+		mock.expect( uuid );
+		return () -> mock.accept( uuid );
+	}
 
 	@Test
 	void happyPath() {
@@ -92,7 +116,7 @@ final class ConsumerMockishTest {
 		// Arrange
 		UUID valueA = UUID.randomUUID();
 		UUID valueB = UUID.randomUUID();
-		ConsumerMockish<UUID> mock = new ConsumerMockish<>();
+		ConsumerMockish<UUID> mock = new ConsumerMockish<>( false );
 		ConsumerMockish<UUID> expectOutput = mock
 			.expect( valueA )
 			.expect( valueB );

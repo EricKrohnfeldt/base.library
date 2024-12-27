@@ -14,6 +14,7 @@
 
 package com.herbmarshall.base.mock.function;
 
+import com.herbmarshall.base.mock.Mockish;
 import org.junit.jupiter.api.Assertions;
 
 import java.util.ArrayList;
@@ -21,14 +22,30 @@ import java.util.List;
 import java.util.function.Consumer;
 
 /**
- * A mock for {@link Consumer}.
+ * A {@link Mockish} for {@link Consumer} interface.
  * @param <T> The type of object to be consumed.
  */
 public final class ConsumerMockish<T>
-	// extends Mockish
+	extends Mockish
 	implements Consumer<T> {
 
 	private final List<T> expected = new ArrayList<>();
+
+	/**
+	 * Create new instance with {@code autoValidate} turned on.
+	 * @see Mockish
+	 */
+	public ConsumerMockish() {
+	}
+
+	/**
+	 * Create new instance.
+	 * Set {@code autoValidate} on by passing {@code true}, turn off by passing {@code false}.
+	 * @see Mockish
+	 */
+	public ConsumerMockish( boolean autoValidate ) {
+		super( autoValidate );
+	}
 
 	/** Prepare for expected call. */
 	public ConsumerMockish<T> expect( T value ) {
@@ -44,8 +61,7 @@ public final class ConsumerMockish<T>
 		);
 	}
 
-	// @Override
-	/** Validate this mock. */
+	@Override
 	public void validate() {
 		Assertions.assertTrue(
 			expected.isEmpty(),
