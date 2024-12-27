@@ -17,8 +17,9 @@ package com.herbmarshall.base.mock.function;
 import com.herbmarshall.base.mock.Mockish;
 import org.junit.jupiter.api.Assertions;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.function.Consumer;
 
 /**
@@ -29,7 +30,7 @@ public final class ConsumerMockish<T>
 	extends Mockish
 	implements Consumer<T> {
 
-	private final List<T> expected = new ArrayList<>();
+	private final Queue<T> expected = new LinkedList<>();
 
 	/**
 	 * Create new instance with {@code autoValidate} turned on.
@@ -73,7 +74,7 @@ public final class ConsumerMockish<T>
 		return "Did not find expected value: " + value;
 	}
 
-	static String error_uncalled( List<?> values ) {
+	static String error_uncalled( Collection<?> values ) {
 		return "Did not call 'accept' for all expectations: " + values;
 	}
 
