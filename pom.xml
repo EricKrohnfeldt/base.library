@@ -23,7 +23,7 @@
 	</parent>
 
 	<artifactId>     base.pom   </artifactId>
-	<version>   1.24   </version>
+	<version>   1.25-SNAPSHOT   </version>
 	<packaging>           pom   </packaging>
 
     <modules>
@@ -41,7 +41,7 @@
 
     <scm>
         <developerConnection>scm:git:ssh://git.herb.herbmarshall.com/repository/util/base.library</developerConnection>
-        <tag>base.pom-1.24</tag>
+        <tag>HEAD</tag>
     </scm>
 
 </project>
