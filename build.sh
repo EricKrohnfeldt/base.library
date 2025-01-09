@@ -74,7 +74,10 @@ if [[ "build" == "${OPERATION}" ]]; then
 
 	STASH_MESSAGE="Prebuild stash $( date )"
 	if [[ "${STASH}" == 'true' ]]; then
-		git stash save "${STASH_MESSAGE}"
+		if [[ "No local changes to save" == "$( git stash save \"${STASH_MESSAGE}\" )" ]]; then
+			echo "Disabling stash as 'No local changes to save'"
+			STASH=false
+		fi
 	fi
 
 	docker run -it --rm \
