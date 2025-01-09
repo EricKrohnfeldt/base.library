@@ -17,32 +17,27 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>      com.herbmarshall   </groupId>
-		<artifactId>        library.pom   </artifactId>
-		<version>                  1.16   </version>
+		<artifactId>        base.pom   </artifactId>
+		<version>      1.24-SNAPSHOT   </version>
+		<groupId>   com.herbmarshall   </groupId>
 	</parent>
 
-	<artifactId>     base.pom   </artifactId>
-	<version>   1.25-SNAPSHOT   </version>
-	<packaging>           pom   </packaging>
+	<artifactId>      bedrock   </artifactId>
+	<version>   1.24-SNAPSHOT   </version>
+	<packaging>           jar   </packaging>
 
-    <modules>
-		<module>   nightShift   </module>
-		<module>         test   </module>
-        <module>   production   </module>
-	</modules>
+	<properties>
+		<classgraph.version>   4.8.179   </classgraph.version>
+	</properties>
 
-	<repositories>
-		<repository>
-			<id>                                                           Nexus   </id>
-			<name>                                       HerbMarshall Repository   </name>
-			<url>   https://nexus.herb.herbmarshall.com/repository/maven-public/   </url>
-		</repository>
-	</repositories>
+	<dependencies>
 
-    <scm>
-        <developerConnection>scm:git:ssh://git.herb.herbmarshall.com/repository/util/base.library</developerConnection>
-        <tag>HEAD</tag>
-    </scm>
+		<dependency>
+			<artifactId>           classgraph   </artifactId>
+			<version>   ${classgraph.version}   </version>
+			<groupId>    io.github.classgraph   </groupId>
+		</dependency>
+
+	</dependencies>
 
 </project>
