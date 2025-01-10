@@ -72,7 +72,7 @@ final class ClassScanTest {
 	}
 
 	@Nested
-	class create_strings {
+	class scan_strings {
 
 		@Test
 		void happyPath() {
@@ -146,6 +146,20 @@ final class ClassScanTest {
 					streamToSet( output )
 				);
 			} );
+		}
+
+		@Test
+		void none_noArg() {
+			// Arrange
+			try ( ClassScan scan = ClassScan.scan() ) {
+				// Act
+				Stream<String> output = scan.getAutomated();
+				// Assert
+				Assertions.assertEquals(
+					class_ALL,
+					streamToSet( output )
+				);
+			}
 		}
 
 		@TestFactory
