@@ -20,7 +20,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 
-import java.util.Collection;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -28,29 +27,10 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.herbmarshall.nightShift.ClassScan.DEFAULT_PACKAGE;
+import static com.herbmarshall.nightShift.PackagesForTesting.*;
 
 @SuppressWarnings( "FieldCanBeLocal" )
 final class ClassScanTest {
-
-	private final String package_happyPath = "com.herbmarshall.nightShift.test.happyPath";
-	private final Set<String> class_happyPath = Set.of(
-		"com.herbmarshall.nightShift.test.happyPath.AutomatedClass"
-	);
-
-	private final String package_happyPath2 = "com.herbmarshall.nightShift.test.happyPath2";
-	private final Set<String> class_happyPath2 = Set.of(
-		"com.herbmarshall.nightShift.test.happyPath2.AutomatedClass2"
-	);
-
-	private final String package_doesNotExist = "com.herbmarshall.nightShift.test.doesNotExist";
-	private final String package_doesNotExist2 = "com.herbmarshall.nightShift.test.doesNotExist2";
-
-	private final Set<String> class_ALL = Stream.of(
-		class_happyPath,
-		class_happyPath2
-	)
-		.flatMap( Collection::stream )
-		.collect( Collectors.toUnmodifiableSet() );
 
 	@Nested
 	class scan_ {
@@ -137,12 +117,12 @@ final class ClassScanTest {
 		@TestFactory
 		DynamicTest happyPath() {
 			// Arrange
-			return safeClose( "happyPath", package_happyPath, scan -> {
+			return safeClose( "happyPath", happyPath, scan -> {
 				// Act
 				Stream<String> output = scan.getAutomated();
 				// Assert
 				Assertions.assertEquals(
-					class_happyPath,
+					streamToSet( happyPath.getAutomated() ),
 					streamToSet( output )
 				);
 			} );
@@ -156,7 +136,7 @@ final class ClassScanTest {
 				Stream<String> output = scan.getAutomated();
 				// Assert
 				Assertions.assertEquals(
-					class_ALL,
+					streamToSet( getAllAutomated() ),
 					streamToSet( output )
 				);
 			}
@@ -170,7 +150,7 @@ final class ClassScanTest {
 				Stream<String> output = scan.getAutomated();
 				// Assert
 				Assertions.assertEquals(
-					class_ALL,
+					streamToSet( getAllAutomated() ),
 					streamToSet( output )
 				);
 			} );
@@ -182,17 +162,17 @@ final class ClassScanTest {
 			return safeClose(
 				"multiple",
 				Set.of(
-					package_happyPath,
-					package_happyPath2,
-					package_doesNotExist
+					happyPath,
+					happyPath2,
+					doesNotExist
 				),
 				scan -> {
 					// Act
 					Stream<String> output = scan.getAutomated();
 					// Assert
 					Assertions.assertEquals(
-						Stream.of( class_happyPath, class_happyPath2 )
-							.flatMap( Collection::stream )
+						Stream.of( happyPath, happyPath2 )
+							.flatMap( PackagesForTesting::getAutomated )
 							.collect( Collectors.toUnmodifiableSet() ),
 						streamToSet( output )
 					);
@@ -203,7 +183,7 @@ final class ClassScanTest {
 		@TestFactory
 		DynamicTest bad() {
 			// Arrange
-			return safeClose( "bad", package_doesNotExist, scan -> {
+			return safeClose( "bad", doesNotExist, scan -> {
 				// Act
 				Stream<String> output = scan.getAutomated();
 				// Assert
@@ -220,8 +200,8 @@ final class ClassScanTest {
 			return safeClose(
 				"multiple_bad",
 				Set.of(
-					package_doesNotExist,
-					package_doesNotExist2
+					doesNotExist,
+					doesNotExist2
 				),
 				scan -> {
 					// Act
@@ -237,16 +217,30 @@ final class ClassScanTest {
 
 	}
 
-	private static DynamicTest safeClose( String name, String targetPackage, Consumer<ClassScan> test ) {
+	private static DynamicTest safeClose(
+		String name,
+		PackagesForTesting targetPackage,
+		Consumer<ClassScan> test
+	) {
 		return safeClose( name, Set.of( targetPackage ), test );
 	}
 
-	private static DynamicTest safeClose( String name, Set<String> targetPackage, Consumer<ClassScan> test ) {
+	private static DynamicTest safeClose(
+		String name,
+		Set<PackagesForTesting> targetPackages,
+		Consumer<ClassScan> test
+	) {
 		return DynamicTest.dynamicTest( name, () -> {
-			try ( ClassScan scan = ClassScan.scan( targetPackage.toArray( new String[ 0 ] ) ) ) {
+			try ( ClassScan scan = ClassScan.scan( setToArray( targetPackages ) ) ) {
 				test.accept( scan );
 			}
 		} );
+	}
+
+	private static String[] setToArray( Set<PackagesForTesting> targetPackages ) {
+		return targetPackages.stream()
+			.map( PackagesForTesting::getName )
+			.toArray( String[]::new );
 	}
 
 	private <E> Set<E> streamToSet( Stream<E> stream ) {
