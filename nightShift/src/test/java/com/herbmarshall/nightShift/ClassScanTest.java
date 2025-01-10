@@ -20,6 +20,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 
+import java.util.Collection;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -32,9 +33,24 @@ import static com.herbmarshall.nightShift.ClassScan.DEFAULT_PACKAGE;
 final class ClassScanTest {
 
 	private final String package_happyPath = "com.herbmarshall.nightShift.test.happyPath";
+	private final Set<String> class_happyPath = Set.of(
+		"com.herbmarshall.nightShift.test.happyPath.AutomatedClass"
+	);
+
 	private final String package_happyPath2 = "com.herbmarshall.nightShift.test.happyPath2";
+	private final Set<String> class_happyPath2 = Set.of(
+		"com.herbmarshall.nightShift.test.happyPath2.AutomatedClass2"
+	);
+
 	private final String package_doesNotExist = "com.herbmarshall.nightShift.test.doesNotExist";
 	private final String package_doesNotExist2 = "com.herbmarshall.nightShift.test.doesNotExist2";
+
+	private final Set<String> class_ALL = Stream.of(
+		class_happyPath,
+		class_happyPath2
+	)
+		.flatMap( Collection::stream )
+		.collect( Collectors.toUnmodifiableSet() );
 
 	@Nested
 	class scan_ {
@@ -126,23 +142,21 @@ final class ClassScanTest {
 				Stream<String> output = scan.getAutomated();
 				// Assert
 				Assertions.assertEquals(
-					Set.of(
-						"com.herbmarshall.nightShift.test.happyPath.AutomatedClass"
-					),
+					class_happyPath,
 					streamToSet( output )
 				);
 			} );
 		}
 
 		@TestFactory
-		DynamicTest none() {
+		DynamicTest none() {  // Will result in same call as no arg
 			// Arrange
 			return safeClose( "none", Set.of(), scan -> {
 				// Act
 				Stream<String> output = scan.getAutomated();
 				// Assert
 				Assertions.assertEquals(
-					Set.of(),
+					class_ALL,
 					streamToSet( output )
 				);
 			} );
@@ -163,10 +177,9 @@ final class ClassScanTest {
 					Stream<String> output = scan.getAutomated();
 					// Assert
 					Assertions.assertEquals(
-						Set.of(
-							"com.herbmarshall.nightShift.test.happyPath.AutomatedClass",
-							"com.herbmarshall.nightShift.test.happyPath2.AutomatedClass2"
-						),
+						Stream.of( class_happyPath, class_happyPath2 )
+							.flatMap( Collection::stream )
+							.collect( Collectors.toUnmodifiableSet() ),
 						streamToSet( output )
 					);
 				}
@@ -229,6 +242,5 @@ final class ClassScanTest {
 	private static String randomString() {
 		return UUID.randomUUID().toString();
 	}
-
 
 }
