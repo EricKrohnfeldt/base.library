@@ -117,7 +117,7 @@ final class ClassScannerTest {
 		@TestFactory
 		DynamicTest happyPath() {
 			// Arrange
-			return safeClose( "happyPath", happyPath, scan -> {
+			return autoClose( "happyPath", happyPath, scan -> {
 				// Act
 				Stream<String> output = scan.getAutomated();
 				// Assert
@@ -145,7 +145,7 @@ final class ClassScannerTest {
 		@TestFactory
 		DynamicTest none() {  // Will result in same call as no arg
 			// Arrange
-			return safeClose( "none", Set.of(), scan -> {
+			return autoClose( "none", Set.of(), scan -> {
 				// Act
 				Stream<String> output = scan.getAutomated();
 				// Assert
@@ -159,7 +159,7 @@ final class ClassScannerTest {
 		@TestFactory
 		DynamicTest multiple() {
 			// Arrange
-			return safeClose(
+			return autoClose(
 				"multiple",
 				Set.of(
 					happyPath,
@@ -183,7 +183,7 @@ final class ClassScannerTest {
 		@TestFactory
 		DynamicTest bad() {
 			// Arrange
-			return safeClose( "bad", doesNotExist, scan -> {
+			return autoClose( "bad", doesNotExist, scan -> {
 				// Act
 				Stream<String> output = scan.getAutomated();
 				// Assert
@@ -197,7 +197,7 @@ final class ClassScannerTest {
 		@TestFactory
 		DynamicTest multiple_bad() {
 			// Arrange
-			return safeClose(
+			return autoClose(
 				"multiple_bad",
 				Set.of(
 					doesNotExist,
@@ -217,15 +217,15 @@ final class ClassScannerTest {
 
 	}
 
-	private static DynamicTest safeClose(
+	static DynamicTest autoClose(
 		String name,
 		PackagesForTesting targetPackage,
 		Consumer<ClassScanner> test
 	) {
-		return safeClose( name, Set.of( targetPackage ), test );
+		return autoClose( name, Set.of( targetPackage ), test );
 	}
 
-	private static DynamicTest safeClose(
+	static DynamicTest autoClose(
 		String name,
 		Set<PackagesForTesting> targetPackages,
 		Consumer<ClassScanner> test
