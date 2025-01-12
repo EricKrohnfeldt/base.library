@@ -26,11 +26,11 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.herbmarshall.nightShift.ClassScan.DEFAULT_PACKAGE;
+import static com.herbmarshall.nightShift.ClassScanner.DEFAULT_PACKAGE;
 import static com.herbmarshall.nightShift.PackagesForTesting.*;
 
 @SuppressWarnings( "FieldCanBeLocal" )
-final class ClassScanTest {
+final class ClassScannerTest {
 
 	@Nested
 	class scan_ {
@@ -39,7 +39,7 @@ final class ClassScanTest {
 		void noArguments() {
 			// Arrange
 			// Act
-			try ( ClassScan output = ClassScan.scan() ) {
+			try ( ClassScanner output = ClassScanner.scan() ) {
 				// Assert
 				Assertions.assertNotNull( output );
 				Assertions.assertEquals(
@@ -59,7 +59,7 @@ final class ClassScanTest {
 			// Arrange
 			String packageName = randomString();
 			// Act
-			try ( ClassScan output = ClassScan.scan( packageName ) ) {
+			try ( ClassScanner output = ClassScanner.scan( packageName ) ) {
 				// Assert
 				Assertions.assertEquals(
 					Set.of( packageName ),
@@ -74,7 +74,7 @@ final class ClassScanTest {
 			String packageA = randomString();
 			String packageB = randomString();
 			// Act
-			try ( ClassScan output = ClassScan.scan( packageA, packageB ) ) {
+			try ( ClassScanner output = ClassScanner.scan( packageA, packageB ) ) {
 				// Assert
 				Assertions.assertEquals(
 					Set.of( packageA, packageB ),
@@ -87,7 +87,7 @@ final class ClassScanTest {
 		void packages_null() {
 			// Arrange
 			// Act
-			try ( ClassScan scan = ClassScan.scan( ( String[] ) null ) ) {
+			try ( ClassScanner scan = ClassScanner.scan( ( String[] ) null ) ) {
 				Assertions.fail();
 			}
 			// Assert
@@ -100,7 +100,7 @@ final class ClassScanTest {
 		void multiple_null() {
 			// Arrange
 			// Act
-			try ( ClassScan scan = ClassScan.scan( randomString(), null, randomString() ) ) {
+			try ( ClassScanner scan = ClassScanner.scan( randomString(), null, randomString() ) ) {
 				Assertions.fail();
 			}
 			// Assert
@@ -122,7 +122,7 @@ final class ClassScanTest {
 				Stream<String> output = scan.getAutomated();
 				// Assert
 				Assertions.assertEquals(
-					streamToSet( happyPath.getAutomated() ),
+					streamToSet( happyPath.getAutomatedNames() ),
 					streamToSet( output )
 				);
 			} );
@@ -131,12 +131,12 @@ final class ClassScanTest {
 		@Test
 		void none_noArg() {
 			// Arrange
-			try ( ClassScan scan = ClassScan.scan() ) {
+			try ( ClassScanner scan = ClassScanner.scan() ) {
 				// Act
 				Stream<String> output = scan.getAutomated();
 				// Assert
 				Assertions.assertEquals(
-					streamToSet( getAllAutomated() ),
+					streamToSet( getAllAutomatedNames() ),
 					streamToSet( output )
 				);
 			}
@@ -150,7 +150,7 @@ final class ClassScanTest {
 				Stream<String> output = scan.getAutomated();
 				// Assert
 				Assertions.assertEquals(
-					streamToSet( getAllAutomated() ),
+					streamToSet( getAllAutomatedNames() ),
 					streamToSet( output )
 				);
 			} );
@@ -172,7 +172,7 @@ final class ClassScanTest {
 					// Assert
 					Assertions.assertEquals(
 						Stream.of( happyPath, happyPath2 )
-							.flatMap( PackagesForTesting::getAutomated )
+							.flatMap( PackagesForTesting::getAutomatedNames )
 							.collect( Collectors.toUnmodifiableSet() ),
 						streamToSet( output )
 					);
@@ -220,7 +220,7 @@ final class ClassScanTest {
 	private static DynamicTest safeClose(
 		String name,
 		PackagesForTesting targetPackage,
-		Consumer<ClassScan> test
+		Consumer<ClassScanner> test
 	) {
 		return safeClose( name, Set.of( targetPackage ), test );
 	}
@@ -228,10 +228,10 @@ final class ClassScanTest {
 	private static DynamicTest safeClose(
 		String name,
 		Set<PackagesForTesting> targetPackages,
-		Consumer<ClassScan> test
+		Consumer<ClassScanner> test
 	) {
 		return DynamicTest.dynamicTest( name, () -> {
-			try ( ClassScan scan = ClassScan.scan( setToArray( targetPackages ) ) ) {
+			try ( ClassScanner scan = ClassScanner.scan( setToArray( targetPackages ) ) ) {
 				test.accept( scan );
 			}
 		} );

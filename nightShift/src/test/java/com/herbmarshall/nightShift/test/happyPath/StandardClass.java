@@ -14,6 +14,8 @@
 
 package com.herbmarshall.nightShift.test.happyPath;
 
-// This is class is not automated and should not be picked up by scan
-class StandardClass {
+import com.herbmarshall.nightShift.Automated;
+
+/** This is class is not {@link Automated} and should <b>NOT</b> be picked up by scan. */
+public final class StandardClass {
 }

@@ -16,6 +16,7 @@ package com.herbmarshall.nightShift.test.happyPath;
 
 import com.herbmarshall.nightShift.Automated;
 
+/** Basic class to test if scanner is working. */
 @Automated
-class AutomatedClass {
+public final class AutomatedClass {
 }

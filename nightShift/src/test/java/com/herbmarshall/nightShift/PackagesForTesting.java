@@ -14,45 +14,52 @@
 
 package com.herbmarshall.nightShift;
 
+import com.herbmarshall.nightShift.test.happyPath.AutomatedClass;
+import com.herbmarshall.nightShift.test.happyPath2.AutomatedClass2;
+import org.junit.jupiter.api.Assertions;
+
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 enum PackagesForTesting {
 
 	happyPath(
 		"com.herbmarshall.nightShift.test.happyPath",
-		java.util.Set.of( "AutomatedClass" )
+		Set.of( AutomatedClass.class )
 	),
 	happyPath2(
 		"com.herbmarshall.nightShift.test.happyPath2",
-		Set.of( "AutomatedClass2" )
+		Set.of( AutomatedClass2.class )
 	),
 	doesNotExist( "com.herbmarshall.nightShift.test.doesNotExist" ),
 	doesNotExist2( "com.herbmarshall.nightShift.test.doesNotExist2" );
 
-	private static final Set<String> allAutomated;
-
 	private final String name;
-	private final Set<String> automated;
+	private final Set<Class<?>> automated;
 
 	PackagesForTesting( String name ) {
 		this( name, Set.of() );
 	}
 
-	PackagesForTesting( String name, Set<String> automated ) {
+	PackagesForTesting( String name, Set<Class<?>> automated ) {
 		this.name = Objects.requireNonNull( name );
-		this.automated = Objects.requireNonNull( automated );
+		this.automated = Set.copyOf( Objects.requireNonNull( automated ) );
+		this.automated.forEach(  // Double check packages
+			classs -> Assertions.assertEquals( name, classs.getPackageName() )
+		);
 	}
 
 	String getName() {
 		return name;
 	}
 
-	Stream<String> getAutomated() {
-		return automated.stream()
-			.map( auto -> String.join( ".", name, auto ) );
+	Stream<Class<?>> getAutomatedClasses() {
+		return automated.stream();
+	}
+
+	Stream<String> getAutomatedNames() {
+		return readNames( getAutomatedClasses() );
 	}
 
 	@Override
@@ -60,13 +67,17 @@ enum PackagesForTesting {
 		return getName();
 	}
 
-	static Stream<String> getAllAutomated() {
-		return allAutomated.stream();
+	static Stream<Class<?>> getAllAutomatedClasses() {
+		return Stream.of( values() )
+			.flatMap( PackagesForTesting::getAutomatedClasses );
 	}
 
-	static {
-		allAutomated = Stream.of( values() )
-			.flatMap( PackagesForTesting::getAutomated )
-			.collect( Collectors.toUnmodifiableSet() );
+	static Stream<String> getAllAutomatedNames() {
+		return readNames( getAllAutomatedClasses() );
 	}
+
+	private static Stream<String> readNames( Stream<Class<?>> classStream ) {
+		return classStream.map( Class::getCanonicalName );
+	}
+
 }

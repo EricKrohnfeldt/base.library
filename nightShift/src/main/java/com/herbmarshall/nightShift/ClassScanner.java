@@ -23,14 +23,14 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-final class ClassScan implements AutoCloseable {
+final class ClassScanner implements AutoCloseable {
 
 	static final String DEFAULT_PACKAGE = "com.herbmarshall";
 
 	private final ScanResult scan;
 	private final Set<String> packages;
 
-	private ClassScan( ScanResult scan, Set<String> packages ) {
+	private ClassScanner( ScanResult scan, Set<String> packages ) {
 		this.scan = Objects.requireNonNull( scan );
 		this.packages = Objects.requireNonNull( packages );
 	}
@@ -51,17 +51,17 @@ final class ClassScan implements AutoCloseable {
 		scan.close();
 	}
 
-	/** Will scan the provided packages for {@link Automated} classes using {@link ClassScan#DEFAULT_PACKAGE}. */
-	public static ClassScan scan() {
+	/** Will scan the provided packages for {@link Automated} classes using {@link ClassScanner#DEFAULT_PACKAGE}. */
+	public static ClassScanner scan() {
 		return scan( DEFAULT_PACKAGE );
 	}
 
 	/**
 	 * Will scan the provided packages for {@link Automated} classes.
-	 * @param packages The package names to scan, example: {@link ClassScan#DEFAULT_PACKAGE}.
+	 * @param packages The package names to scan, example: {@link ClassScanner#DEFAULT_PACKAGE}.
 	 */
-	public static ClassScan scan( String... packages ) {
-		return new ClassScan(
+	public static ClassScanner scan( String... packages ) {
+		return new ClassScanner(
 			new ClassGraph()
 				//.verbose()
 				.enableClassInfo()

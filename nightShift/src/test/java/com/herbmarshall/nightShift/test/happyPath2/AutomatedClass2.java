@@ -16,6 +16,7 @@ package com.herbmarshall.nightShift.test.happyPath2;
 
 import com.herbmarshall.nightShift.Automated;
 
+/** Another basic class to test if scanner can pick up two packages. */
 @Automated
-class AutomatedClass2 {
+public final class AutomatedClass2 {
 }
