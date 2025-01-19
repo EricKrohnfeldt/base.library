@@ -45,17 +45,17 @@ do
 		--docs)
 			OPERATION='docs'
 		;;
-		-c|--noChecks)
+		-c|-C|--noChecks)
 			SKIP_CHECKS='-Dcheckstyle.skip=true'
 		;;
-		-t|--noTests)
+		-t|-T|--noTests)
 			SKIP_TESTS='-Dmaven.test.skip.exec'
 		;;
-		-x)
+		-x|-X)
 			SKIP_CHECKS='-Dcheckstyle.skip=true'
 			SKIP_TESTS='-Dmaven.test.skip.exec'
 		;;
-		-s)
+		-s|-S)
 			STASH='true'
 		;;
 		*)
