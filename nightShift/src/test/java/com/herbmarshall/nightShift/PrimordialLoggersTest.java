@@ -25,15 +25,17 @@ import java.util.stream.Stream;
 final class PrimordialLoggersTest {
 
 	@TestFactory
-	Stream<DynamicTest> happyPath() {
+	Stream<DynamicTest> factory() {
 		return Stream.of( PrimordialLoggers.values() )
-			.flatMap( this::happyPath );
+			.flatMap( this::buildTests );
 	}
 
-	private Stream<DynamicTest> happyPath( PrimordialLogger logger ) {
+	private Stream<DynamicTest> buildTests( PrimordialLogger logger ) {
 		return Stream.of(
 			happyPath( logger + " out", logger, PrimordialLogger::out ),
-			happyPath( logger + " err", logger, PrimordialLogger::err )
+			happyPath( logger + " err", logger, PrimordialLogger::err ),
+			nullMessage( logger + " out", logger, PrimordialLogger::out ),
+			nullMessage( logger + " err", logger, PrimordialLogger::err )
 		);
 	}
 
@@ -43,6 +45,22 @@ final class PrimordialLoggersTest {
 				action.accept( logger, randomString() + "\n" )
 			)
 		);
+	}
+
+	private DynamicTest nullMessage(
+		String name,
+		PrimordialLogger logger,
+		BiConsumer<PrimordialLogger, String> action
+	) {
+		return DynamicTest.dynamicTest( name, () -> {
+			try {
+				action.accept( logger, null );
+				Assertions.fail();
+			}
+			catch ( NullPointerException npe ) {
+				System.out.println( "Pass: " + npe.getMessage() );
+			}
+		} );
 	}
 
 	private String randomString() {

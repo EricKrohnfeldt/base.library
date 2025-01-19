@@ -18,8 +18,8 @@ package com.herbmarshall.nightShift;
 public interface PrimordialLogger {
 
 	/** Write to standard out if enabled ( maybe redirected ). */
-	void out( String message );
+	void out( Object message );
 	/** Write to standard error if enabled ( maybe redirected ). */
-	void err( String message );
+	void err( Object message );
 
 }

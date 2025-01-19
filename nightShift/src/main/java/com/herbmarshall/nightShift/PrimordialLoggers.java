@@ -15,6 +15,7 @@
 package com.herbmarshall.nightShift;
 
 import java.io.PrintStream;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 enum PrimordialLoggers implements PrimordialLogger {
@@ -38,13 +39,13 @@ enum PrimordialLoggers implements PrimordialLogger {
 	}
 
 	@Override
-	public void out( String message ) {
-		stdout.accept( message );
+	public void out( Object message ) {
+		stdout.accept( Objects.requireNonNull( message ).toString() );
 	}
 
 	@Override
-	public void err( String message ) {
-		stderr.accept( message );
+	public void err( Object message ) {
+		stderr.accept( Objects.requireNonNull( message ).toString() );
 	}
 
 	private static Consumer<String> wrap( PrintStream stream ) {
