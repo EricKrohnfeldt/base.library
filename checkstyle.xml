@@ -1,4 +1,18 @@
 <?xml version="1.0"?>
+<!--
+  ~ This file is part of herbmarshall.com: base.library  ( hereinafter "base.library" ).
+  ~
+  ~ base.library is free software: you can redistribute it and/or modify it under the terms of
+  ~ the GNU General Public License as published by the Free Software Foundation, either version 2 of the License,
+  ~ or (at your option) any later version.
+  ~
+  ~ base.library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+  ~ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+  ~ See the GNU General Public License for more details.
+  ~ You should have received a copy of the GNU General Public License along with base.library.
+  ~ If not, see <https://www.gnu.org/licenses/>.
+  -->
+
 <!DOCTYPE module PUBLIC "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN" "https://checkstyle.org/dtds/configuration_1_3.dtd">
 
 <!--
@@ -162,7 +176,7 @@
 		<module name="EmptyForIteratorPad" />
 		<module name="GenericWhitespace" />
 		<module name="MethodParamPad">
-			<property name="tokens" value="CTOR_DEF, LITERAL_NEW, METHOD_DEF, SUPER_CTOR_CALL, ENUM_CONSTANT_DEF" />
+			<property name="tokens" value="CTOR_DEF, LITERAL_NEW, METHOD_DEF, SUPER_CTOR_CALL" />
 		</module>
 		<module name="NoWhitespaceAfter">
 			<property name="tokens" value="AT, INC, DEC, UNARY_MINUS, UNARY_PLUS, BNOT, DOT, ARRAY_DECLARATOR, INDEX_OP" />
