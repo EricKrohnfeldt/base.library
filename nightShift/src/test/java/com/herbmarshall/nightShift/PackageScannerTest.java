@@ -26,11 +26,11 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.herbmarshall.nightShift.ClassScanner.DEFAULT_PACKAGE;
+import static com.herbmarshall.nightShift.PackageScanner.DEFAULT_PACKAGE;
 import static com.herbmarshall.nightShift.PackagesForTesting.*;
 
 @SuppressWarnings( "FieldCanBeLocal" )
-final class ClassScannerTest {
+final class PackageScannerTest {
 
 	@Nested
 	class scan_ {
@@ -39,7 +39,7 @@ final class ClassScannerTest {
 		void noArguments() {
 			// Arrange
 			// Act
-			try ( ClassScanner output = ClassScanner.scan() ) {
+			try ( PackageScanner output = PackageScanner.scan() ) {
 				// Assert
 				Assertions.assertNotNull( output );
 				Assertions.assertEquals(
@@ -59,7 +59,7 @@ final class ClassScannerTest {
 			// Arrange
 			String packageName = randomString();
 			// Act
-			try ( ClassScanner output = ClassScanner.scan( packageName ) ) {
+			try ( PackageScanner output = PackageScanner.scan( packageName ) ) {
 				// Assert
 				Assertions.assertEquals(
 					Set.of( packageName ),
@@ -74,7 +74,7 @@ final class ClassScannerTest {
 			String packageA = randomString();
 			String packageB = randomString();
 			// Act
-			try ( ClassScanner output = ClassScanner.scan( packageA, packageB ) ) {
+			try ( PackageScanner output = PackageScanner.scan( packageA, packageB ) ) {
 				// Assert
 				Assertions.assertEquals(
 					Set.of( packageA, packageB ),
@@ -87,7 +87,7 @@ final class ClassScannerTest {
 		void packages_null() {
 			// Arrange
 			// Act
-			try ( ClassScanner scan = ClassScanner.scan( ( String[] ) null ) ) {
+			try ( PackageScanner scan = PackageScanner.scan( ( String[] ) null ) ) {
 				Assertions.fail();
 			}
 			// Assert
@@ -100,7 +100,7 @@ final class ClassScannerTest {
 		void multiple_null() {
 			// Arrange
 			// Act
-			try ( ClassScanner scan = ClassScanner.scan( randomString(), null, randomString() ) ) {
+			try ( PackageScanner scan = PackageScanner.scan( randomString(), null, randomString() ) ) {
 				Assertions.fail();
 			}
 			// Assert
@@ -131,7 +131,7 @@ final class ClassScannerTest {
 		@Test
 		void none_noArg() {
 			// Arrange
-			try ( ClassScanner scan = ClassScanner.scan() ) {
+			try ( PackageScanner scan = PackageScanner.scan() ) {
 				// Act
 				Stream<String> output = scan.getAutomated();
 				// Assert
@@ -220,7 +220,7 @@ final class ClassScannerTest {
 	static DynamicTest autoClose(
 		String name,
 		PackagesForTesting targetPackage,
-		Consumer<ClassScanner> test
+		Consumer<PackageScanner> test
 	) {
 		return autoClose( name, Set.of( targetPackage ), test );
 	}
@@ -228,10 +228,10 @@ final class ClassScannerTest {
 	static DynamicTest autoClose(
 		String name,
 		Set<PackagesForTesting> targetPackages,
-		Consumer<ClassScanner> test
+		Consumer<PackageScanner> test
 	) {
 		return DynamicTest.dynamicTest( name, () -> {
-			try ( ClassScanner scan = ClassScanner.scan( setToArray( targetPackages ) ) ) {
+			try ( PackageScanner scan = PackageScanner.scan( setToArray( targetPackages ) ) ) {
 				test.accept( scan );
 			}
 		} );
