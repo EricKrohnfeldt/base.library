@@ -18,17 +18,15 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
-import java.util.function.Function;
 
 import static com.herbmarshall.nightShift.ClassLoader.error_badClassName;
-import static com.herbmarshall.nightShift.ClassLoader.loader;
 
 final class ClassLoaderTest {
 
 	@Test
 	void happyPath() {
 		// Arrange
-		Function<String, Class<?>> loader = loader();
+		ClassLoader loader = loader();
 		Class<?> expected = PackagesForTesting.happyPath
 			.getAutomatedClasses()
 			.findFirst()
@@ -43,7 +41,7 @@ final class ClassLoaderTest {
 	@Test
 	void classNotFound() {
 		// Arrange
-		Function<String, Class<?>> loader = loader();
+		ClassLoader loader = loader();
 		String className = randomString();
 		// Act
 		try {
@@ -61,7 +59,7 @@ final class ClassLoaderTest {
 	@Test
 	void null_target() {
 		// Arrange
-		Function<String, Class<?>> loader = loader();
+		ClassLoader loader = loader();
 		// Act
 		try {
 			loader.apply( null );
@@ -70,6 +68,10 @@ final class ClassLoaderTest {
 		catch ( NullPointerException npe ) {
 			System.out.println( "Pass: " + npe.getMessage() );
 		}
+	}
+
+	private ClassLoader loader() {
+		return new ClassLoader();
 	}
 
 	private static String randomString() {

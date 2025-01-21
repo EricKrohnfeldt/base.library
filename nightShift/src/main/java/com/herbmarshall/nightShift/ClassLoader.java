@@ -17,23 +17,21 @@ package com.herbmarshall.nightShift;
 import java.util.Objects;
 import java.util.function.Function;
 
-final class ClassLoader {
+final class ClassLoader implements Function<String, Class<?>> {
 
-	private ClassLoader() {}
+	private final java.lang.ClassLoader loader = Thread.currentThread().getContextClassLoader();
 
-	static Function<String, Class<?>> loader() {
-		final var loader = Thread.currentThread().getContextClassLoader();
-		return target -> {
-			try {
-				return loader.loadClass( Objects.requireNonNull( target ) );
-			}
-			catch ( ClassNotFoundException exception ) {
-				throw new RuntimeException(
-					error_badClassName( target ),
-					exception
-				);
-			}
-		};
+	@Override
+	public Class<?> apply( String target ) {
+		try {
+			return loader.loadClass( Objects.requireNonNull( target ) );
+		}
+		catch ( ClassNotFoundException exception ) {
+			throw new RuntimeException(
+				error_badClassName( target ),
+				exception
+			);
+		}
 	}
 
 	static String error_badClassName( String name ) {
