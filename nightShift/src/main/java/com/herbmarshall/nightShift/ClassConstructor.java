@@ -17,6 +17,7 @@ package com.herbmarshall.nightShift;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -36,10 +37,10 @@ final class ClassConstructor<C> {
 //		throw new UnsupportedOperationException();
 //	}
 
-	C getInstance( Object... dependencies ) {
+	C conjure( List<Object> dependencies ) {
 		Constructor<C> constructor = getConstructor();
 		try {
-			return constructor.newInstance( dependencies );
+			return constructor.newInstance( toArray( dependencies ) );
 		}
 		catch (
 			InstantiationException |
@@ -68,6 +69,10 @@ final class ClassConstructor<C> {
 			.map( constructor -> ( Constructor<C> ) constructor )
 			.filter( not( ClassConstructor::isPrivate ) )
 			.collect( Collectors.toUnmodifiableSet() );
+	}
+
+	private Object[] toArray( List<Object> dependencies ) {
+		return dependencies.toArray( new Object[ 0 ] );
 	}
 
 	private static boolean isPrivate( Constructor<?> constructor ) {

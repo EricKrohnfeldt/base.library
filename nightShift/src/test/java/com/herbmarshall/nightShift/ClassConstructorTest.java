@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -98,8 +99,9 @@ final class ClassConstructorTest {
 			return DynamicTest.dynamicTest( name, () -> {
 				// Arrange
 				ClassConstructor<T> wrapper = ClassConstructor.expose( type );
+				List<Object> argumentList = Arrays.asList( arguments );
 				// Act
-				T output = wrapper.getInstance( arguments );
+				T output = wrapper.conjure( argumentList );
 				// Assert
 				Assertions.assertNotNull( output );
 			} );
@@ -114,9 +116,10 @@ final class ClassConstructorTest {
 			return DynamicTest.dynamicTest( name, () -> {
 				// Arrange
 				ClassConstructor<T> wrapper = ClassConstructor.expose( type );
+				List<Object> argumentList = Arrays.asList( arguments );
 				// Act
 				try {
-					wrapper.getInstance( arguments );
+					wrapper.conjure( argumentList );
 					Assertions.fail();
 				}
 				// Assert
