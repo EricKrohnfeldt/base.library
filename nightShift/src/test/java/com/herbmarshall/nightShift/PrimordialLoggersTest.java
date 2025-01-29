@@ -27,6 +27,10 @@ final class PrimordialLoggersTest {
 	@TestFactory
 	Stream<DynamicTest> factory() {
 		return Stream.of( PrimordialLoggers.values() )
+			.flatMap( logger -> Stream.of(
+				logger,
+				logger.autoLine()
+			) )
 			.flatMap( this::buildTests );
 	}
 
@@ -34,8 +38,8 @@ final class PrimordialLoggersTest {
 		return Stream.of(
 			happyPath( logger + " out", logger, PrimordialLogger::out ),
 			happyPath( logger + " err", logger, PrimordialLogger::err ),
-			nullMessage( logger + " out", logger, PrimordialLogger::out ),
-			nullMessage( logger + " err", logger, PrimordialLogger::err )
+			nullMessage( logger + " out null", logger, PrimordialLogger::out ),
+			nullMessage( logger + " err null", logger, PrimordialLogger::err )
 		);
 	}
 

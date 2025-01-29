@@ -32,10 +32,12 @@ enum PrimordialLoggers implements PrimordialLogger {
 
 	private final Consumer<String> stdout;
 	private final Consumer<String> stderr;
+	private final AutoLine autoLine;
 
 	PrimordialLoggers( PrintStream stdout, PrintStream stderr ) {
 		this.stdout = wrap( stdout );
 		this.stderr = wrap( stderr );
+		this.autoLine = new AutoLine( this );
 	}
 
 	@Override
@@ -48,10 +50,39 @@ enum PrimordialLoggers implements PrimordialLogger {
 		stderr.accept( Objects.requireNonNull( message ).toString() );
 	}
 
+	public PrimordialLogger autoLine() {
+		return autoLine;
+	}
+
 	private static Consumer<String> wrap( PrintStream stream ) {
 		return stream == null ?
 			message -> { /* Do nothing */ } :
 			stream::print;
+	}
+
+	private static class AutoLine implements PrimordialLogger {
+
+		private final PrimordialLogger logger;
+
+		AutoLine( PrimordialLogger logger ) {
+			this.logger = Objects.requireNonNull( logger );
+		}
+
+		@Override
+		public void out( Object message ) {
+			logger.out( Objects.requireNonNull( message ) + "\n" );
+		}
+
+		@Override
+		public void err( Object message ) {
+			logger.err( Objects.requireNonNull( message ) + "\n" );
+		}
+
+		@Override
+		public String toString() {
+			return logger + "-AutoLine";
+		}
+
 	}
 
 }
