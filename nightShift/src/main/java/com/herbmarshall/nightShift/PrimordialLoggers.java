@@ -17,36 +17,38 @@ package com.herbmarshall.nightShift;
 import java.io.PrintStream;
 import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
+// Using Suppliers instead of PrintStream directly is because Junit apparently messes with the streams?
 enum PrimordialLoggers implements PrimordialLogger {
 
-	            /*  null = No operation     */
-	            /*                          */
-	            /*  Stdout      Stderr      */
-	STANDARD    (   System.out, null         ),
-	VERBOSE     (   System.out, System.err   ),
-	ERROR       (   null,       System.err   ),
-	REDIRECT_OUT(   System.out, System.out   ),
-	REDIRECT_ERR(   System.err, System.err   ),
-	QUIET       (   null,       null         );
+	            /*  null = No operation                  */
+	            /*                                       */
+	            /*  Stdout            Stderr             */
+	STANDARD    (   () -> System.out, null               ),
+	VERBOSE     (   () -> System.out, () -> System.err   ),
+	ERROR       (   null,             () -> System.err   ),
+	REDIRECT_OUT(   () -> System.out, () -> System.out   ),
+	REDIRECT_ERR(   () -> System.err, () -> System.err   ),
+	QUIET       (   null,             null               );
 
 	private final Consumer<String> stdout;
 	private final Consumer<String> stderr;
 	private final AutoLine autoLine;
 
-	PrimordialLoggers( PrintStream stdout, PrintStream stderr ) {
+	PrimordialLoggers( Supplier<PrintStream> stdout, Supplier<PrintStream> stderr ) {
 		this.stdout = wrap( stdout );
 		this.stderr = wrap( stderr );
 		this.autoLine = new AutoLine( this );
 	}
 
 	@Override
-	public void out( Object message ) {
+	public synchronized void out( Object message ) {
 		stdout.accept( Objects.requireNonNull( message ).toString() );
 	}
 
 	@Override
-	public void err( Object message ) {
+	public synchronized void err( Object message ) {
 		stderr.accept( Objects.requireNonNull( message ).toString() );
 	}
 
@@ -54,10 +56,13 @@ enum PrimordialLoggers implements PrimordialLogger {
 		return autoLine;
 	}
 
-	private static Consumer<String> wrap( PrintStream stream ) {
+	private static Consumer<String> wrap( Supplier<PrintStream> stream ) {
 		return stream == null ?
 			message -> { /* Do nothing */ } :
-			stream::print;
+			message -> {
+				stream.get().print( message );
+				stream.get().flush();
+			};
 	}
 
 	private static class AutoLine implements PrimordialLogger {
